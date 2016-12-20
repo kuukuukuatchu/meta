@@ -31,13 +31,17 @@ function spell.cd(spellID)
 	end
 end
 
+function spell.name(spellID)
+	return select(1, GetSpellInfo(spellID))
+end
+
 function spell.help(spellID)
-	local spellName = GetSpellInfo(spellID)
+	local spellName = spell.name(spellID)
     return IsHelpfulSpell(spellName) ~= nil
 end
 
 function spell.harm(spellID)
-	local spellName = GetSpellInfo(spellID)
+	local spellName = spell.name(spellID)
     return IsHarmfulSpell(spellName) ~= nil
 end
 
@@ -46,15 +50,13 @@ function spell.id(spellName)
 end
 
 function spell.inRange(spellID,unit)
-    local spellName = GetSpellInfo(spellID)
-    if IsSpellInRange(spellName,unit) == nil or IsSpellInRange(spellName,unit) == 1 then
+    if IsSpellInRange(spell.name(spellID),unit) == nil or IsSpellInRange(spell.name(spellID),unit) == 1 then
         return true
     end
 end
 
 function spell.known(spellID)
-    local spellName = GetSpellInfo(spellID)
-	if GetSpellBookItemInfo(spellName) ~= nil then
+	if GetSpellBookItemInfo(spell.name(spellID)) ~= nil then
 		return true
 	end
     if IsPlayerSpell(tonumber(spellID)) == true then
@@ -72,10 +74,6 @@ end
 
 function spell.maxRange(spellID)
 	return select(6, GetSpellInfo(spell))
-end
-
-function spell.name(spellID)
-	return select(1,GetSpellInfo(spellID))
 end
 
 function spell.usable(spellID)

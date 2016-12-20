@@ -15,6 +15,7 @@ function cast.best(spellCast)
 end
 
 function cast.check(spellCast,unitCast)
+    unitCast = unitCast or unit.getBest(spellCast)
     if spell.usable(spellCast) and spell.cd(spellCast) and spell.known(spellCast)
         and spell.inRange(spellCast,unitCast) and unit.exists(unitCast) and unit.sight(unitCast)
     then
@@ -23,10 +24,10 @@ function cast.check(spellCast,unitCast)
 end
 
 function cast.dead(spellCast,unitCast)
-    if spell.help(spellCast) and unit.friend(unitCast) and unit.dead(unitCast) then
+    if unit.friend(unitCast) and unit.dead(unitCast) then
         CastSpellByName(spell.name(spellCast), unitCast)
-        spell.last = spell
-        unit.last = unit
+        -- spell.last = spell
+        -- unit.last = unit
     end
 end
 
@@ -37,16 +38,16 @@ function cast.enemy(spellCast,unitCast)
             local X,Y,Z = unit.position(unitCast)
             ClickPosition(X,Y,Z)
         end
-        spell.last = spellCast
-        unit.last = unitCast
+        -- spell.last = spellCast
+        -- unit.last = unitCast
     end
 end
 
 function cast.friend(spellCast,unitCast)
-    if spell.help(spellCast) and unit.friend(unitCast) and not unit.dead(unitCast) then
+    if unit.friend(unitCast) and not unit.dead(unitCast) then
         CastSpellByName(spell.name(spellCast), unitCast)
-        spell.last = spellCast
-        unit.last = unitCast
+        -- spell.last = spellCast
+        -- unit.last = unitCast
     end
 end
 

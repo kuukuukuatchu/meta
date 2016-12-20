@@ -9,21 +9,9 @@ local unit = { }
 --- Unit Related Functions Here ---
 -----------------------------------
 
-function unit.best(spell)
-    if spell.help(spell) then
-        return unit.best.help(spell)
-    end
-    if spell.harm(spell) then
-        return unit.best.harm(spell)
-    end
-    if not spell.help(spell) and not spell.harm(spell) then
-        return unit.best.none(spell)
-    end
-end
-
-function unit.best.help(spell)
-    if spell.help(spell) then
-        if spell.maxRange(spell) > 0 then
+function unit.bestHelp(spellID)
+    if spell.help(spellID) then
+        if spell.maxRange(spellID) > 0 then
             return 'player' -- Dynamic Assign Friendly in Range
         else
             return 'player' -- Default to 'player'
@@ -31,9 +19,9 @@ function unit.best.help(spell)
     end
 end
 
-function unit.best.harm(spell)
-    if spell.harm(spell) then
-        if spell.maxRange(spell) > 0 then
+function unit.bestHarm(spellID)
+    if spell.harm(spellID) then
+        if spell.maxRange(spellID) > 0 then
             return 'target' -- Dynamic Assign Enemy in Range
         else
             return 'target' -- Default to Melee Range
@@ -41,13 +29,25 @@ function unit.best.harm(spell)
     end
 end
 
-function unit.best.none(spell)
-    if not spell.help(spell) and not spell.harm(spell) then
+function unit.bestNone(spellID)
+    if not spell.help(spellID) and not spell.harm(spellID) then
         if unit.exists('target') then
             return 'target'
         else
             return 'player'
         end
+    end
+end
+
+function unit.getBest(spellID)
+    if spell.help(spellID) then
+        return unit.bestHelp(spellID)
+    end
+    if spell.harm(spellID) then
+        return unit.bestHarm(spellID)
+    end
+    if not spell.help(spellID) and not spell.harm(spellID) then
+        return unit.bestNone(spellID)
     end
 end
 

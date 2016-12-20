@@ -5,16 +5,16 @@ local unit      = require('conditions.unit')
 
 -- Init VengeanceCuteOne
 local VengeanceCuteOne = {}
-local rotation.ID = 581
-local rotation.Name = "CuteOne"
-local rotationFunction = VengeanceCuteOne.runRotation()
+-- local rotation.ID = 581
+-- local rotation.Name = "CuteOne"
+-- local rotationFunction = VengeanceCuteOne.runRotation()
 
 -- Get Vengeance Spells
-local idList = {}
-idList = spellList.mergeIdTables(idList)
-for k, v in pairs(idList) do
-    base[k] = v
-end
+-- local idList = {}
+-- idList = spellList.mergeIdTables(idList)
+-- for k, v in pairs(idList) do
+--     base[k] = v
+-- end
 
 --------------------------
 --- Vengeance: CuteOne ---
@@ -26,11 +26,11 @@ end
 
 
 -- Throw Glaive
-    if cast(throwGlaive,nil,'check') and unit.distance('target') > 5 then
+    if cast.check(throwGlaive) and unit.distance('target') > 5 then
         cast(throwGlaive)
     end
 
-end
+-- end
 
 -- Return Profile
 return VengenaceCuteOne

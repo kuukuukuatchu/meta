@@ -1,8 +1,14 @@
-local meta  = ...
-local cast = require('conditions.cast')
-local spell = require('conditions.spell')
-local unit  = require('conditions.unit')
-local base  = { }
+local meta      = ...
+local cast      = require('conditions.cast')
+local unit      = require('conditions.unit')
+local spellList = require('conditions.spellList')
+local base      = { }
+
+local idList = {}
+idList = spellList.mergeIdTables(idList)
+for k, v in pairs(idList) do
+    base[k] = v
+end
 
 -- Tag print return with [Name] - Colored to current class.
 local function join(...)
@@ -20,36 +26,34 @@ function base.print(...)
 end
 
 -- Return Combat for Unit - True/False
-function base.combat(unit)
-    return UnitAffectingCombat(unit) ~= nil
+function base.combat(unitCheck)
+    return UnitAffectingCombat(unitCheck) ~= nil
 end
 
 -- Starts the Auto Attack
-function base.startAttack(unit)
+function base.startAttack(unitCheck)
     local unit = unit or 'target'
     if not IsCurrentSpell(6603) then
-        return StartAttack(unit)
+        return StartAttack(unitCheck)
     end
 end
 
 -- Stops the Auto Attack
-function base.stopAttack(unit)
+function base.stopAttack(unitCheck)
     local unit = unit or 'target'
     if IsCurrentSpell(6603) then
-        return StopAttack(unit)
+        return StopAttack(unitCheck)
     end
 end
 
 -- Return Cast
 function base.castSpell(spellCast,unitCast)
-    if unitCast == nil then
-        unitCast = unit.best(spellCast)
-    end
+    unitCast = unitCast or unit.getBest(spellCast)
     if cast.check(spellCast,unitCast) then
         --cast.best(spellID) -- not sure how to add this one
         if unit.dead(unitCast) then
             cast.dead(spellCast,unitCast)
-        elseif unit.friend(unit) then
+        elseif unit.friend(unitCast) then
             cast.friend(spellCast,unitCast)
         else
             cast.enemy(spellCast,unitCast)
