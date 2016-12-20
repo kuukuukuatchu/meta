@@ -41,6 +41,10 @@ function spell.harm(spellID)
     return IsHarmfulSpell(spellName) ~= nil
 end
 
+function spell.id(spellName)
+	return select(7,GetSpellInfo(spellName))
+end
+
 function spell.inRange(spellID,unit)
     local spellName = GetSpellInfo(spellID)
     if IsSpellInRange(spellName,unit) == nil or IsSpellInRange(spellName,unit) == 1 then
@@ -60,6 +64,18 @@ function spell.known(spellID)
     -- then
 	-- 	return true
 	-- end
+end
+
+function spell.minRange(spell)
+	return select(5, GetSpellInfo(spell))
+end
+
+function spell.maxRange(spellID)
+	return select(6, GetSpellInfo(spell))
+end
+
+function spell.name(spellID)
+	return select(1,GetSpellInfo(spellID))
 end
 
 function spell.usable(spellID)

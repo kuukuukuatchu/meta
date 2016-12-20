@@ -6,6 +6,7 @@ local magic
 -- load in all the base calls, conditions, etc
 magic           = require('conditions.base')
 magic.buff      = require('conditions.buff')
+magic.cast      = require('conditions.cast')
 magic.health    = require('conditions.health')
 magic.spell     = require('conditions.spell')
 magic.spellList = require('conditions.spellList')

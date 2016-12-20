@@ -1,5 +1,6 @@
 -- Required to access other files.
-local meta = ...
+local meta  = ...
+local spell = require('conditions.spell')
 
 -- Init Unit
 local unit = { }
@@ -7,6 +8,49 @@ local unit = { }
 -----------------------------------
 --- Unit Related Functions Here ---
 -----------------------------------
+
+function unit.best(spell)
+    if spell.help(spell) then
+        return unit.best.help(spell)
+    end
+    if spell.harm(spell) then
+        return unit.best.harm(spell)
+    end
+    if not spell.help(spell) and not spell.harm(spell) then
+        return unit.best.none(spell)
+    end
+end
+
+function unit.best.help(spell)
+    if spell.help(spell) then
+        if spell.maxRange(spell) > 0 then
+            return 'player' -- Dynamic Assign Friendly in Range
+        else
+            return 'player' -- Default to 'player'
+        end
+    end
+end
+
+function unit.best.harm(spell)
+    if spell.harm(spell) then
+        if spell.maxRange(spell) > 0 then
+            return 'target' -- Dynamic Assign Enemy in Range
+        else
+            return 'target' -- Default to Melee Range
+        end
+    end
+end
+
+function unit.best.none(spell)
+    if not spell.help(spell) and not spell.harm(spell) then
+        if unit.exists('target') then
+            return 'target'
+        else
+            return 'player'
+        end
+    end
+end
+
 function unit.exists(unit)
     if FireHack and ObjectExists(unit) then
         return true

@@ -5,6 +5,9 @@ local unit      = require('conditions.unit')
 
 -- Init VengeanceCuteOne
 local VengeanceCuteOne = {}
+local rotation.ID = 581
+local rotation.Name = "CuteOne"
+local rotationFunction = VengeanceCuteOne.runRotation()
 
 -- Get Vengeance Spells
 local idList = {}
@@ -18,13 +21,15 @@ end
 --------------------------
 
 -- Start Attack
--- actions=auto_attack
-startAttack()
+    -- actions=auto_attack
+    startAttack()
 
 
 -- Throw Glaive
-if cast(throwGlaive,nil,'check') and unit.distance('target') > 5 then
-    cast(throwGlaive)
+    if cast(throwGlaive,nil,'check') and unit.distance('target') > 5 then
+        cast(throwGlaive)
+    end
+
 end
 
 -- Return Profile
