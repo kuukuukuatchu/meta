@@ -10,6 +10,7 @@ magic.cast      = require('conditions.cast')
 magic.health    = require('conditions.health')
 magic.spell     = require('conditions.spell')
 magic.spellList = require('conditions.spellList')
+magic.loader    = require('loader')
 magic.unit      = require('conditions.unit')
 
 return function(func)

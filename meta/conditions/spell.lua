@@ -50,22 +50,19 @@ function spell.id(spellName)
 end
 
 function spell.inRange(spellID,unit)
-    if IsSpellInRange(spell.name(spellID),unit) == nil or IsSpellInRange(spell.name(spellID),unit) == 1 then
-        return true
-    end
+    return IsSpellInRange(spell.name(spellID),unit) == nil or IsSpellInRange(spell.name(spellID),unit) == 1
+end
+
+function spell.inSpellbook(spellID)
+	return GetSpellBookItemInfo(spell.name(spellID)) ~= nil
+end
+
+function spell.playerSpell(spellID)
+	return IsPlayerSpell(tonumber(spellID))
 end
 
 function spell.known(spellID)
-	if GetSpellBookItemInfo(spell.name(spellID)) ~= nil then
-		return true
-	end
-    if IsPlayerSpell(tonumber(spellID)) == true then
-		return true
-	end
-    -- if hasPerk(spellID) then
-    -- then
-	-- 	return true
-	-- end
+	return spell.inSpellbook(spellID) or spell.playerSpell(spellID)
 end
 
 function spell.minRange(spell)
@@ -76,11 +73,16 @@ function spell.maxRange(spellID)
 	return select(6, GetSpellInfo(spell))
 end
 
+function spell.castable(spellID)
+	return select(1, IsUsableSpell(spellID))
+end
+
+function spell.hasResouces(spellID)
+	return not select(2, IsUsableSpell(spellID))
+end
+
 function spell.usable(spellID)
-    local castable, notEnoughResource = IsUsableSpell(spellID)
-    if castable and not notEnoughResource then
-        return true
-    end
+    return spell.castable(spellID) and spell.hasREsources(spellID)
 end
 
 -- Return Functions
