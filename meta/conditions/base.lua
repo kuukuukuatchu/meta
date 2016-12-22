@@ -46,19 +46,14 @@ function base.stopAttack(unitCheck)
     end
 end
 
--- Return Cast
-function base.castSpell(spellCast,unitCast)
-    unitCast = unitCast or unit.getBest(spellCast)
-    if cast.check(spellCast,unitCast) then
-        --cast.best(spellID) -- not sure how to add this one
-        if unit.dead(unitCast) then
-            cast.dead(spellCast,unitCast)
-        elseif unit.friend(unitCast) then
-            cast.friend(spellCast,unitCast)
-        else
-            cast.enemy(spellCast,unitCast)
-        end
-    end
-end
+-- -- Return Cast
+-- function base.castSpell(spellCast,unitCast)
+--     unitCast = unitCast or unit.getBest(spellCast)
+--     -- cast.best(spellID) -- not sure how to add this one
+--     if unit.friend(unitCast) and unit.dead(unitCast) then
+--     cast.dead(spellCast,unitCast)
+--     cast.friend(spellCast,unitCast)
+--     cast.enemy(spellCast,unitCast)
+-- end
 
 return base

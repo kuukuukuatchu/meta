@@ -10,33 +10,33 @@ local unit = { }
 -----------------------------------
 
 function unit.bestHelp(spellID)
-    if spell.help(spellID) then
+    -- if spell.help(spellID) then
         if spell.maxRange(spellID) > 0 then
             return 'player' -- Dynamic Assign Friendly in Range
         else
             return 'player' -- Default to 'player'
         end
-    end
+    -- end
 end
 
 function unit.bestHarm(spellID)
-    if spell.harm(spellID) then
+    -- if spell.harm(spellID) then
         if spell.maxRange(spellID) > 0 then
             return 'target' -- Dynamic Assign Enemy in Range
         else
             return 'target' -- Default to Melee Range
         end
-    end
+    -- end
 end
 
 function unit.bestNone(spellID)
-    if not spell.help(spellID) and not spell.harm(spellID) then
+    -- if not spell.help(spellID) and not spell.harm(spellID) then
         if unit.exists('target') then
             return 'target'
         else
             return 'player'
         end
-    end
+    -- end
 end
 
 function unit.getBest(spellID)

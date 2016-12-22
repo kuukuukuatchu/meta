@@ -77,12 +77,12 @@ function spell.castable(spellID)
 	return select(1, IsUsableSpell(spellID))
 end
 
-function spell.hasResouces(spellID)
+function spell.hasResources(spellID)
 	return not select(2, IsUsableSpell(spellID))
 end
 
 function spell.usable(spellID)
-    return spell.castable(spellID) and spell.hasREsources(spellID)
+    return spell.castable(spellID) and spell.hasResources(spellID)
 end
 
 -- Return Functions
