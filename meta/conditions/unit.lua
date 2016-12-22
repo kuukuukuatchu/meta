@@ -10,37 +10,31 @@ local unit = { }
 -----------------------------------
 
 function unit.bestHelp(spellID)
-    -- if spell.help(spellID) then
-        if spell.maxRange(spellID) > 0 then
-            return 'player' -- Dynamic Assign Friendly in Range
-        else
-            return 'player' -- Default to 'player'
-        end
-    -- end
+    if spell.maxRange(spellID) > 0 then
+        return 'player' -- Dynamic Assign Friendly in Range
+    else
+        return 'player' -- Default to 'player'
+    end
 end
 
 function unit.bestHarm(spellID)
-    -- if spell.harm(spellID) then
-        if spell.maxRange(spellID) > 0 then
-            return 'target' -- Dynamic Assign Enemy in Range
-        else
-            return 'target' -- Default to Melee Range
-        end
-    -- end
+    if spell.maxRange(spellID) > 0 then
+        return 'target' -- Dynamic Assign Enemy in Range
+    else
+        return 'target' -- Default to Melee Range
+    end
 end
 
 function unit.bestNone(spellID)
-    -- if not spell.help(spellID) and not spell.harm(spellID) then
-        if unit.exists('target') then
-            return 'target'
-        else
-            return 'player'
-        end
-    -- end
+    if unit.exists('target') then
+        return 'target'
+    else
+        return 'player'
+    end
 end
 
 function unit.getBest(spellID)
-    if spell.help(spellID) then
+    if spell.help(spellID) and not spell.harm(spellID) then
         return unit.bestHelp(spellID)
     end
     if spell.harm(spellID) then
@@ -52,9 +46,7 @@ function unit.getBest(spellID)
 end
 
 function unit.exists(unit)
-    if FireHack and ObjectExists(unit) then
-        return true
-    elseif not FireHack and UnitExists(unit) then
+    if (FireHack and ObjectExists(unit)) or (not FireHack and UnitExists(unit)) then
         return true
     end
 end
@@ -75,8 +67,8 @@ function unit.id(unit)
 	end
 end
 
-function unit.sight(unit1,unit2)
-    local unit2 = unit2 or 'player'
+function unit.noSightValid(unit1,unit2)
+    unit2 = unit2 or 'player'
     local skipLoSTable = {
         76585, 	-- Ragewing
         77692, 	-- Kromog
@@ -97,16 +89,15 @@ function unit.sight(unit1,unit2)
             return true
         end
     end
+    return false
+end
+
+function unit.sight(unit1,unit2)
+    unit2 = unit2 or 'player'
     if unit.exists(unit1) and unit.visible(unit1) and unit.exists(unit2) and unit.visible(unit2) then
         local X1,Y1,Z1 = unit.position(unit1)
         local X2,Y2,Z2 = unit.position(unit2)
-        if TraceLine(X1,Y1,Z1 + 2,X2,Y2,Z2 + 2, 0x10) == nil then
-            return true
-        else
-            return false
-        end
-    else
-        return true
+        return unit.noSightValid(unit1,unit2) or not TraceLine(X1,Y1,Z1 + 2,X2,Y2,Z2 + 2, 0x10)
     end
 end
 

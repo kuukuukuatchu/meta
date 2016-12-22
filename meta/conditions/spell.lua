@@ -65,12 +65,12 @@ function spell.known(spellID)
 	return spell.inSpellbook(spellID) or spell.playerSpell(spellID)
 end
 
-function spell.minRange(spell)
-	return select(5, GetSpellInfo(spell))
+function spell.minRange(spellID)
+	return select(5, GetSpellInfo(spellID))
 end
 
 function spell.maxRange(spellID)
-	return select(6, GetSpellInfo(spell))
+	return select(6, GetSpellInfo(spellID))
 end
 
 function spell.castable(spellID)
@@ -83,6 +83,10 @@ end
 
 function spell.usable(spellID)
     return spell.castable(spellID) and spell.hasResources(spellID)
+end
+
+function spell.charges(spellID)
+	return select(1,GetSpellCharges(spellID))
 end
 
 -- Return Functions

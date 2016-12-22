@@ -1,9 +1,8 @@
 -- Required to access other files.
 local meta  = ...
-local spell = require('conditions.spell')
 
 -- Init Unit
-local player = { }
+local power = { }
 
 local powerList     = {
     mana            = 0,
@@ -27,9 +26,9 @@ local powerList     = {
     pain            = 18,
 }
 
-function player.power(powerType)
+function power.amount(powerType)
     return UnitPower('player',powerList[powerType])
 end
 
 -- Return Functions
-return unit
+return power
