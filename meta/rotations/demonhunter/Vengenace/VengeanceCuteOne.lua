@@ -3,6 +3,9 @@ local meta      = ...
 local spellList = require('conditions.spellList')
 local unit      = require('conditions.unit')
 
+local profileID = 581
+local profileName = "CuteOne"
+
 -- Init VengeanceCuteOne
 local VengeanceCuteOne = {}
 -- local rotation.ID = 581
