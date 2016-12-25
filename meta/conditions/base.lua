@@ -4,7 +4,7 @@ local unit      = require('conditions.unit')
 local spellList = require('conditions.spellList')
 local base      = { }
 
-local idList = {}
+idList = {}
 idList = spellList.mergeIdTables(idList)
 for k, v in pairs(idList) do
     base[k] = v

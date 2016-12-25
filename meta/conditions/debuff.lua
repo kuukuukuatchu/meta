@@ -5,6 +5,11 @@ local spell = require('conditions.spell')
 -- Init Debuff
 local debuff = { }
 
+-- Get Debuff IDs for Spec
+for k, v in pairs(idList.debuffs) do
+    debuff[k] = v
+end
+
 -----------------------------------
 --- Debuff Related Functions Here ---
 -----------------------------------

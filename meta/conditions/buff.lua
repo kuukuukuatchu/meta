@@ -5,6 +5,11 @@ local spell = require('conditions.spell')
 -- Init Buff
 local buff = { }
 
+-- Get Buff IDs for Spec
+for k, v in pairs(idList.buffs) do
+    buff[k] = v
+end
+
 -----------------------------------
 --- Buff Related Functions Here ---
 -----------------------------------
@@ -12,7 +17,11 @@ local buff = { }
 -- Buff Exists
 function buff.exists(unit, spellCheck, source)
     source = source or 'player'
-    return UnitBuff(unit, spell.name(spellCheck), source)
+    if UnitBuff(unit, spell.name(spellCheck), source) ~= nil then
+        return true
+    else
+        return false
+    end
 end
 
 -- Buff Count - return Number of Buffs applied
@@ -37,7 +46,11 @@ end
 
 -- Buff Stack - return Stack count of Buff on Unit
 function buff.stack(unit,spellCheck)
-    return select(4,UnitBuff(unit,spell.name(spellCheck))) or 0
+    if not buff.exists(unit,spellCheck) then
+        return 0
+    else
+        return select(4,UnitBuff(unit,spell.name(spellCheck)))
+    end
 end
 
 -- Return Functions

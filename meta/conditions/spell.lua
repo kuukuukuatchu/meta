@@ -31,6 +31,10 @@ function spell.cd(spellID)
 	end
 end
 
+function spell.gcd()
+	return spell.cd(61304)
+end
+
 function spell.name(spellID)
 	return select(1, GetSpellInfo(spellID))
 end
@@ -47,10 +51,6 @@ end
 
 function spell.id(spellName)
 	return select(7,GetSpellInfo(spellName))
-end
-
-function spell.inRange(spellID,unit)
-    return IsSpellInRange(spell.name(spellID),unit) == nil or IsSpellInRange(spell.name(spellID),unit) == 1
 end
 
 function spell.inSpellbook(spellID)

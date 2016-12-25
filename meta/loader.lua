@@ -41,4 +41,12 @@ end
 -- for debug
 _G['_rotations'] = rotations
 
+-- run rotation
+AddFrameCallback(function ()
+    for k, v in pairs(rotations) do
+       rotations[k].rotation()
+       break
+    end
+end)
+
 return loader

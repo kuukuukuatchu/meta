@@ -141,6 +141,15 @@ function unit.distance(unit1,unit2)
 	end
 end
 
+function unit.inRange(spellID,unitCheck)
+	local spellName = spell.name(spellID)
+	if not SpellHasRange(spellName) then
+		return unit.distance(unitCheck) < 5
+	else
+    	return IsSpellInRange(spellName,unitCheck) == 1
+	end
+end
+
 function unit.friend(unit1,unit2)
     local unit2 = unit2 or 'player'
     return UnitIsFriend(unit1,unit1) ~= nil
