@@ -19,6 +19,15 @@ end
 --- Spell Related Functions Here ---
 ------------------------------------
 
+function spell.last(spellID)
+	if not lastSpell then lastSpell = 0 end
+	if not spellID then
+		return lastSpell
+	else
+		lastSpell = spellID
+	end
+end
+
 -- Returns current seconds remaining on cooldown accounting for latency
 function spell.cd(spellID)
     if GetSpellCooldown(spellID) == 0 then
@@ -36,7 +45,8 @@ function spell.gcd()
 end
 
 function spell.name(spellID)
-	return select(1, GetSpellInfo(spellID))
+	local spellName = GetSpellInfo(spellID)
+	return spellName
 end
 
 function spell.help(spellID)

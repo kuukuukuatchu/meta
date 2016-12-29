@@ -42,11 +42,23 @@ end
 _G['_rotations'] = rotations
 
 -- run rotation
-AddFrameCallback(function ()
-    for k, v in pairs(rotations) do
-       rotations[k].rotation()
-       break
+local timer = {}
+function loader.timer(timerName,timerLength)
+    if timer[timerName] == nil then timer[timerName] = 0 end
+    if GetTime() - timer[timerName] >= timerLength then
+        timer[timerName] = GetTime()
+        return true
+    else
+        return false
     end
+end
+AddFrameCallback(function ()
+    -- if loader.timer('runRotation',math.random(0.15, 0.3)) then
+        for k, v in pairs(rotations) do
+           rotations[k].rotation()
+           break
+        end
+    -- end
 end)
 
 return loader

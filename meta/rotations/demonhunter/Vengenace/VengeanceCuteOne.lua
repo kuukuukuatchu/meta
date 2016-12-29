@@ -2,7 +2,8 @@ local function rotation()
 --------------------------
 --- Vengeance: CuteOne ---
 --------------------------
--- print(tostring(cast.complete))
+
+-- print(tostring(buff.exists('player',buff.demonSpikes)))
 if unit.exists('target') then
     -- Start Attack
         -- actions=auto_attack
@@ -25,7 +26,7 @@ if unit.exists('target') then
         -- actions+=/infernal_strike,if=!sigil_placed&!in_flight&remains-travel_time-delay<0.3*duration&artifact.fiery_demise.enabled&dot.fiery_brand.ticking
         -- actions+=/infernal_strike,if=!sigil_placed&!in_flight&remains-travel_time-delay<0.3*duration&(!artifact.fiery_demise.enabled|(max_charges-charges_fractional)*recharge_time<cooldown.fiery_brand.remains+5)&(cooldown.sigil_of_flame.remains>7|charges=2)
         if cast.check(infernalStrike) and unit.distance('target') < 5 and spell.charges(infernalStrike) > 1 then
-            cast.infernalStrike()
+            cast.infernalStrike("player")
         end
     -- Spirit Bomb
         -- actions+=/spirit_bomb,if=debuff.frailty.down

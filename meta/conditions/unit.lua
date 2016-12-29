@@ -4,10 +4,16 @@ local spell = require('conditions.spell')
 
 -- Init Unit
 local unit = { }
+unit.last = "player"
 
 -----------------------------------
 --- Unit Related Functions Here ---
 -----------------------------------
+
+function unit.casting(unitCheck)
+    unitCheck = unitCheck or 'player'
+    return UnitCastingInfo(unitCheck) ~= nil or UnitChannelInfo(unitCheck) ~= nil
+end
 
 function unit.bestHelp(spellID)
     if spell.maxRange(spellID) > 0 then

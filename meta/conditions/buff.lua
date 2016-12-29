@@ -15,13 +15,13 @@ end
 -----------------------------------
 
 -- Buff Exists
-function buff.exists(unit, spellCheck, source)
-    source = source or 'player'
-    if UnitBuff(unit, spell.name(spellCheck), source) ~= nil then
-        return true
-    else
-        return false
-    end
+function buff.exists(unit, spellCheck, filter)
+    filter = filter or 'player'
+    if filter == nil or filter == 'player' then
+		return UnitBuff(unit,spell.name(spellCheck)) ~= nil
+	else
+		return UnitBuff(unit,spell.name(spellCheck),filter) ~= nil
+	end
 end
 
 -- Buff Count - return Number of Buffs applied

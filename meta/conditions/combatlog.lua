@@ -1,6 +1,6 @@
-local meta = ...
-local cast = require('conditions.cast')
-cast.complete = cast.complete
+local meta  = ...
+local cast  = require('conditions.cast')
+local spell = require('conditions.spell')
 
 -- Init Combat Log
 local combatlog = { }
@@ -8,75 +8,50 @@ local combatlog = { }
 -----------------------------------------
 --- Combat Log Related Functions Here ---
 -----------------------------------------
---[[ Combat Log Reader --]]
--- combatlog.frame1 = CreateFrame("FRAME")
--- combatlog.frame1:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED")
--- combatlog.frame1:RegisterUnitEvent("UNIT_SPELLCAST_FAILED")
--- function combatlog.frame1:OnEvent(event, arg1, arg2, arg3, arg4, arg5)
---     if event == "UNIT_SPELLCAST_SUCCEEDED" or event == "UNIT_SPELLCAST_FAILED" then
---     	local sourceName, spellName, rank, line, spellID = arg1, arg2, arg3, arg4, arg5
---         if not cast.complete then cast.complete = true end
---     end
--- end
--- combatlog.frame1:SetScript("OnEvent", combatlog.frame1.OnEvent)
 
-AddEventCallback("UNIT_SPELLCAST_SUCCEEDED",function (...)
-    local SourceUnit 	= select(1,...)
-	local SpellID 		= select(5,...)
-    if SourceUnit == "player" then
-        for k, v in pairs(cast.list) do
-            if SpellID == k then
-                table.remove(cast.list,k)
-                break
-            end
-        end
-    end
-end)
-AddEventCallback("UNIT_SPELLCAST_FAILED",function (...)
-    local SourceUnit 	= select(1,...)
-	local SpellID 		= select(5,...)
-    if SourceUnit == "player" then
-        for k, v in pairs(cast.list) do
-            if SpellID == k then
-                table.remove(cast.list,k)
-                break
-            end
-        end
-    end
-end)
-AddEventCallback("SPELL_CAST_SUCCESS",function (...)
-    local SourceUnit 	= select(4,...)
-	local SpellID 		= select(12,...)
-    if SourceUnit == "player" then
-        for k, v in pairs(cast.list) do
-            if SpellID == k then
-                table.remove(cast.list,k)
-                break
-            end
-        end
-    end
-end)
-AddEventCallback("SPELL_CAST_FAILED",function (...)
-    local SourceUnit 	= select(4,...)
-	local SpellID 		= select(12,...)
-    if SourceUnit == "player" then
-        for k, v in pairs(cast.list) do
-            if SpellID == k then
-                table.remove(cast.list,k)
-                break
-            end
-        end
-    end
-end)
--- combatlog.frame2 = CreateFrame("FRAME")
--- combatlog.frame2:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
--- function combatlog.frame2(...)
---     local timeStamp, param = ...
---     if event == "SPELL_CAST_SUCCESS" or event == "SPELL_CAST_FAILED" then
---         if not cast.complete then cast.complete = true end
+-- AddEventCallback("COMBAT_LOG_EVENT_UNFILTERED",function (...)
+--     local timeStamp, param, hideCaster, source, sourceName, sourceFlags, sourceRaidFlags, destination,
+--         destName, destFlags, destRaidFlags, spellID, spellName, _, spellType = ...
+--     if param == "SPELL_CAST_SUCCESS" or param == "SPELL_CAST_FAILED" then
+--         if source == "player" then
+--             if param == "SPELL_CAST_SUCCESS" then print('|cffa330c9[meta] |cff00FF00 Cast Sucess: |r'..spellName..'|cffFFFF00 with Id: |r'..spellID..'|cffFFFF00 at: |r'..destName) end
+--             if param == "SPELL_CAST_FAILED" then print('|cffa330c9[meta] |cffFF0000 Cast Sucess: |r'..spellName..'|cffFFFF00 with Id: |r'..spellID..'|cffFFFF00 at: |r'..destName) end
+--             for k, v in pairs(cast.list) do
+--                 if SpellID == k then
+--                     table.remove(cast.list,k)
+--                     break
+--                 end
+--             end
+--         end
 --     end
--- end
--- combatlog.frame2:SetScript("OnEvent", combatlog.frame2)
+-- end)
+
+-- AddEventCallback("UNIT_SPELLCAST_SENT", function(...)
+--     local SourceUnit, SpellName = ...
+--     local SpellID = select(7,GetSpellInfo(SpellName))
+--     if SourceUnit == "player" then
+--         -- print('|cffa330c9 [meta] |cff00FF00 Cast Start: |r'..SpellName..'|cffFFFF00 with Id: |r'..SpellID)
+--         table.insert(cast.list, SpellID)
+--     end
+-- end)
+
+AddEventCallback("PLAYER_REGEN_ENABLED", function (...)
+    print("|cffa330c9 [meta] |r Combat Ended")
+end)
+
+AddEventCallback("UNIT_SPELLCAST_SUCCEEDED", function (...)
+    local SourceUnit, SpellName, _, _, SpellID = ...
+    if SourceUnit == "player" and SpellID == spell.last() then
+        print('|cffa330c9 [meta] |cff00FF00 Cast Sucess: |r'..SpellName..'|cffFFFF00 with Id: |r'..SpellID)
+    end
+end)
+AddEventCallback("UNIT_SPELLCAST_FAILED", function (...)
+    local SourceUnit, SpellName, _, _, SpellID = ...
+    if SourceUnit == "player" and SpellID == spell.last() then
+        print('|cffa330c9 [meta] |cffFF0000 Cast Failed: |r'..SpellName..'|cffFFFF00 with Id: |r'..SpellID)
+    end
+end)
+
 
 -- Return Functions
 return combatlog
