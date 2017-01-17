@@ -1,5 +1,6 @@
 -- Required to access other files.
 local meta = ...
+-- local spell = require('conditions.spell')
 
 -- Init spellList
 local spellList = {}
@@ -123,10 +124,12 @@ spellList.idList = {
             buffs                           = {
                 breathOfSindragosa          = 152279,
                 darkSuccor                  = 101568,
+                hungeringRuneWeapon         = 207127,
                 icyTalons                   = 194879,
                 killingMachine              = 51124,
                 obliteration                = 207256,
                 pillarOfFrost               = 51271,
+                remorselessWinter           = 196770,
                 rime                        = 59052,
             },
             debuffs                         = {
@@ -273,10 +276,10 @@ spellList.idList = {
                 demonicAppetite             = 206478,
                 demonReborn                 = 193897,
                 desperateInstincts          = 205411,
-                felBarrage                  = 211053,
+                felBarrage                  = 211053, 
                 felMastery                  = 192939,
                 firstBlood                  = 206416,
-                mastersOfTheGlaive          = 203556,
+                masterOfTheGlaive           = 203556,
                 momentum                    = 206476,
                 nemesis                     = 206491,
                 netherwalk                  = 196555,
@@ -330,23 +333,22 @@ spellList.idList = {
             talents                         = {
                 abyssalStrike               = 207550,
                 agonizingFlames             = 207548,
-                razorSpikes                 = 209400,
-                feastofSouls                = 207697,
-                fallout                     = 227174,
-                burningAlive                = 207739,
-                flameCrash                  = 227322,
-                feedTheDemon                = 218612,
-                fracture                    = 209795,
-                soulRending                 = 217996,
-                consentratedSigils          = 207666,
-                sigilOfChains               = 202138,
-                quickenedSigils             = 209281,
-                felDevastation              = 212084,
                 bladeTurning                = 203753,
-                spiritBomb                  = 218679,
+                burningAlive                = 207739,
+                consentratedSigils          = 207666,
+                fallout                     = 227174,
+                feastofSouls                = 207697,
+                feedTheDemon                = 218612,
+                flameCrash                  = 227322,
+                fracture                    = 209795,
                 lastResort                  = 209258,
                 netherBond                  = 207810,
+                quickenedSigils             = 209281,
+                razorSpikes                 = 209400,
+                sigilOfChains               = 202138,
                 soulBarrier                 = 227225,
+                soulRending                 = 217996,
+                spiritBomb                  = 218679,
             },
         },
         -- All
@@ -380,8 +382,8 @@ spellList.idList = {
                 glyphOfTatteredWings            = 220226,
             },
             talents                         = {
-                -- felblade                        = 232893,
-                -- felEruption                     = 211881,
+                felblade                        = 232893,
+                felEruption                     = 211881,
             },
         },
     },
@@ -713,6 +715,7 @@ spellList.idList = {
                 exhilaration                = 109304,
                 feignDeath                  = 5384,
                 flare                       = 1543,
+                intimidation                = 19577,
                 killCommand                 = 34026,
                 misdirection                = 34477,
                 multiShot                   = 2643,
@@ -725,7 +728,8 @@ spellList.idList = {
             },
             buffs                           = {
                 bestialWrath                = 19574,
-                direBeast                   = 120694
+                direBeast                   = 120694,
+                volley                      = 194386
             },
             debuffs                         = {
 
@@ -737,7 +741,8 @@ spellList.idList = {
                 direfrenzy                  = 217200,
                 aMurderOfCrows              = 131894,
                 barrage                     = 120360,
-                volley                      = 194386
+                volley                      = 194386,
+        intimidation            = 19577,
             },
         },
         -- Marksmanship
@@ -760,6 +765,7 @@ spellList.idList = {
                 explosiveShot               = 212431,
                 feignDeath                  = 5384,
                 flare                       = 1543,
+        intimidation                = 19577,
                 markedShot                  = 185901,
                 misdirection                = 34477,
                 multiShot                   = 2643,
@@ -776,6 +782,7 @@ spellList.idList = {
                 lockAndLoad                 = 194594,
                 markingTargets              = 223138,
                 trueshot                    = 193526,
+                volley                      = 194386
             },
             debuffs                         = {
                 huntersMark                 = 185365,
@@ -800,26 +807,67 @@ spellList.idList = {
                 sidewinders                 = 214579,
                 piercingShot                = 198670,
                 trickShot                   = 199544,
+        intimidation                = 19577,
             },
         },
         -- Survival
         [255] = {
             abilities                       = {
-
+                aMurderOfCrows              = 131894,
+                aspectOfTheCheetah          = 186257,
+                aspectOfTheEagle            = 186289,
+                aspectOfTheTurtle           = 186265,
+                butchery                    = 212436,
+                carve                       = 187708,
+                caltrops                    = 187698,
+                dragonsfireGrenade          = 194855,
+                eagleEye                    = 6197,
+                exhilaration                = 109304,
+                explosiveTrap               = 191433,
+                feignDeath                  = 5384,
+                flankingStrike              = 202800,
+                flare                       = 1543,
+                furyOfTheEagle              = 203415,
+                harpoon                     = 190925,
+                hatchetToss                 = 193265,
+                intimidation                = 19577,
+                lacerate                    = 185855,
+                mongooseBite                = 190928,
+                muzzle                      = 187707,
+                rangersNet                  = 200108,
+                raptorStrike                = 186270,
+                splittingCobra              = 194407,
+                snakeHunter                 = 201078,
+                steelTrap                   = 187650,
+                throwingAxes                = 200163,
             },
             artifacts                       = {
 
             },
             buffs                           = {
-
+                mokNathalTactics            = 201081,
+                mongooseFury                = 190931,
             },
             debuffs                         = {
-
+                caltrops                    = 187698,
+                lacerate                    = 185855,
+                serpentSting                = 118253,
             },
             glyphs                          = {
 
             },
             talents                         = {
+                animalInstincts             = 204315,
+                throwingAxes                = 200163,
+                wayOfTheMokNathal           = 201082,
+                caltrops                    = 194277,
+                steelTrap                   = 162488,
+                aMurderOfCrows              = 206505,
+                snakeHunter                 = 201078,
+                butchery                    = 212436,
+                dragonsfireGrenade          = 194855,
+                serpentSting                = 87935,
+                intimidation                = 19577,
 
             },
         },
@@ -849,21 +897,39 @@ spellList.idList = {
         -- Arcane
         [62] = {
             abilities                       = {
+                arcaneBarage                = 44425,
+                arcaneBlast                 = 30451,
+                arcaneExplosion             = 1449,
+                arcaneMissles               = 5143,
+                arcanePower                 = 12042,
+                evocation                   = 12051,
+                arcaneFamiliar              = 205022,
+                arcaneCharge                = 36032,
+
 
             },
             artifacts                       = {
+                markOfAluneth               = 224968,
 
             },
             buffs                           = {
+              arcaneFamiliar                = 210126,
+              arcanePower                   = 12042,
+              arcaneCharge                  = 36032,
+              arcaneMissles                 = 79683,
 
             },
             debuffs                         = {
+              arcaneCharge                  = 36032,
+              netherTempest                 = 114923,
 
             },
             glyphs                          = {
 
             },
             talents                         = {
+                netherTempest               = 114923,
+                arcaneFamiliar              = 205022,
 
             },
         },
@@ -927,6 +993,7 @@ spellList.idList = {
                 flurry                      = 44614,
                 freeze                      = 231596,
                 frostbolt                   = 116,
+                frozenTouch                 = 205030,
                 frostBomb                   = 112948,
                 frozenOrb                   = 84714,
                 iceLance                    = 30455,
@@ -934,14 +1001,19 @@ spellList.idList = {
                 summonWaterElemental        = 31687,
             },
             artifacts                       = {
-                ebonBolt                    = 214634,
+                ebonbolt                    = 214634,
                 icyHand                     = 220817,
             },
             buffs                           = {
                 brainFreeze                 = 190447,
+                frostBomb                   = 112948,
                 fingersOfFrost              = 112965,
                 icyVeins                    = 12472,
+                chainReaction               = 195418,
                 zannesuJourney              = 226852,
+                timeWarp                    = 80353,
+                iceFloes                    = 108839,
+                iceBarrier                  = 11426,
             },
             debuffs                         = {
                 frostBomb                   = 112948,
@@ -958,6 +1030,7 @@ spellList.idList = {
                 frozenTouch                 = 205030,
                 glacialSpike                = 199786,
                 iceNova                     = 157997,
+                iceFloes                    = 108839,
                 lonelyWinter                = 205024,
                 rayOfFrost                  = 205021,
                 splittingIce                = 56377,
@@ -1010,15 +1083,32 @@ spellList.idList = {
         -- Brewmaster
         [268] = {
             abilities                       = {
-
+                blackoxBrew                 = 115399,
+                blackoutStrike              = 205523,
+                breathofFire                = 115181,
+                chiBurst                    = 123986,
+                chiWave                     = 115098,
+                detox                       = 218164,
+                effuse                      = 116694,
+                expelHarm                   = 115072,
+                explodingKeg                = 214326,
+                fortifyingBrew              = 115203,
+                healingElixir               = 122281,
+                ironskinBrew                = 115308,
+                kegSmash                    = 121253,
+                purifyingBrew               = 119582,
+                spearHandStrike             = 116705,
             },
             artifacts                       = {
 
             },
             buffs                           = {
+                ironskinBrew                = 215479,
 
             },
             debuffs                         = {
+                moderateStagger             = 124274,
+                heavyStagger                = 124273,
 
             },
             glyphs                          = {
@@ -1125,8 +1215,9 @@ spellList.idList = {
             buffs                           = {
                 serenity                    = 152173,
                 stormEarthAndFire           = 137639,
-                touchOfKarma                = 122470,
                 hitCombo                    = 196741,
+                theEmperorsCapacitor        = 235054,
+                touchOfKarma                = 122470,
             },
             debuffs                         = {
                 markOfTheCrane              = 228287,
@@ -1246,19 +1337,18 @@ spellList.idList = {
                 bladeOfJustice              = 184575,
                 cleanseToxins               = 213644,
                 consecration                = 205228,
-                crusade                     = 224668,
+                crusade                     = 231895,
                 divineHammer                = 198034,
                 divineStorm                 = 53385,
                 executionSentence           = 213757,
                 eyeForAnEye                 = 205191,
                 greaterBlessingOfKings      = 203538,
-                greaterBlessingOfMight      = 203528,
                 greaterBlessingOfWisdom     = 203539,
                 handOfHinderance            = 183218,
                 holyWrath                   = 210220,
+                judgmentOfLight             = 183788,
                 justicarsVengeance          = 215661,
                 rebuke                      = 96231,
-                sealOfLight                 = 202273,
                 shieldOfVengeance           = 184662,
                 templarsVerdict             = 85256,
                 wakeOfAshes                 = 205273,
@@ -1286,8 +1376,8 @@ spellList.idList = {
                 wrathOfTheAshbringer        = 186945,
             },
             buffs                           = {
+                crusade                     = 231895,
                 divinePurpose               = 223819,
-                greaterBlessingOfMight      = 203528,
                 greaterBlessingOfKings      = 203538,
                 greaterBlessingOfWisdom     = 203539,
                 theFiresOfJustice           = 209785,
@@ -1309,10 +1399,10 @@ spellList.idList = {
                 executionSentence           = 213757,
                 eyeForAnEye                 = 205191,
                 finalVerdict                = 198038,
+                fistOfJustice               = 234299,
                 greaterJudgment             = 218178,
                 holyWrath                   = 210220,
                 justicarsVengeance          = 215661,
-                sealOfLight                 = 202273,
                 theFiresOfJustice           = 203316,
                 virtuesBlade                = 202271,
                 wordOfGlory                 = 210191,
@@ -1354,6 +1444,8 @@ spellList.idList = {
             },
             talents                         = {
                 blindingLight               = 115750,
+                cavalier                    = 230332,
+                judgmentOfLight             = 183788,
                 repentance                  = 20066,
             },
         },
@@ -1466,8 +1558,8 @@ spellList.idList = {
         Shared = {
             abilities                       = {
                 dispelMagic                 = 528,
-                fade                        = 526,
-                levitate                    = 1703,
+                fade                        = 586,
+                levitate                    = 1706,
                 massDispel                  = 32375,
                 mindBender                  = 200174,
                 shadowMend                  = 186263,
@@ -1728,6 +1820,7 @@ spellList.idList = {
             buffs                           = {
                 envelopingShadows           = 206237,
                 finalityNightblade          = 197498,
+                shadowBlades                = 121471,
                 shadowDance                 = 185422,
                 stealth                     = 115191,
                 symbolsOfDeath              = 212283,
@@ -1762,6 +1855,7 @@ spellList.idList = {
                 cloakOfShadows              = 31224,
                 crimsonVial                 = 185311,
                 deathFromAbove              = 152150,
+                detection                   = 56814,
                 distract                    = 1725,
                 feint                       = 1966,
                 goremawsBite                = 209783, --809784
@@ -1916,7 +2010,7 @@ spellList.idList = {
             },
             debuffs                         = {
                 frostbrand                  = 147732,
-                stormTempests               = 214265,
+                stormTempest                = 214265,
             },
             glyphs                          = {
 
@@ -2007,7 +2101,6 @@ spellList.idList = {
                 grimoireOfSacrifice         = 108503,
                 haunt                       = 48181,
                 howlOfTerror                = 5484,
-                manaTap                     = 196104,
                 phantomSingularity          = 205179,
                 reapSouls                   = 216698,
                 seedOfCorruption            = 27243,
@@ -2040,7 +2133,7 @@ spellList.idList = {
                 compoundingHorror           = 199281,
                 deadwindHarvester           = 216708,
                 demonicPower                = 196099,
-                manaTap                     = 196104,
+                empoweredLifeTap            = 235156,
                 tormentedSouls              = 216695,
             },
             debuffs                         = {
@@ -2055,11 +2148,11 @@ spellList.idList = {
             talents                         = {
                 absoluteCorruption          = 196103,
                 contagion                   = 196105,
-                drainSoul                   = 198590,
+                empoweredLifeTap            = 235157,
                 grimoireOfSacrifice         = 108503,
                 haunt                       = 48181,
                 howlOfTerror                = 5484,
-                manaTap                     = 196104,
+                maleficGrasp                = 235155,
                 phantomSingularity          = 205179,
                 siphonLife                  = 63106,
                 soulConduit                 = 215941,
@@ -2077,6 +2170,7 @@ spellList.idList = {
                 demonicEmpowerment          = 193396,
                 demonwrath                  = 193440,
                 doom                        = 603,
+                drainLife                   = 689,
                 grimoireFelguard            = 111898,
                 handOfGuldan                = 105174,
                 implosion                   = 196277,
@@ -2123,7 +2217,6 @@ spellList.idList = {
                 havoc                       = 80240,
                 immolate                    = 348,
                 incinerate                  = 29722,
-                manaTap                     = 196104,
                 rainOfFire                  = 5740,
                 shadowBolt                  = 686,
                 shadowburn                  = 17877,
@@ -2152,10 +2245,10 @@ spellList.idList = {
             },
             buffs                           = {
                 backdraft                   = 117828, --196406,
-                demonicPower                = 196099,
                 conflagrationOfChaos        = 196546,
+                demonicPower                = 196099,
+                empoweredLifeTap            = 235156,
                 lordOfFlames                = 224103,
-                manaTap                     = 196104,
             },
             debuffs                         = {
                 immolate                    = 157736,
@@ -2169,10 +2262,10 @@ spellList.idList = {
                 backdraft                   = 196406,
                 cataclysm                   = 152108,
                 channelDemonfire            = 196447,
+                empoweredLifeTap            = 235157,
                 eradication                 = 196412,
                 fireAndBrimstone            = 196408,
                 grimoireOfSacrifice         = 108503,
-                manaTap                     = 196104,
                 reverseEntropy              = 205148,
                 roaringBlaze                = 205184,
                 shadowburn                  = 17877,
@@ -2185,7 +2278,6 @@ spellList.idList = {
             abilities                       = {
                 darkPact                    = 108416,
                 demonicCircle               = 48018,
-                drainLife                   = 689,
                 fear                        = 5782,
                 grimoireFelhunter           = 111897,
                 grimoireImp                 = 111859,
@@ -2481,18 +2573,34 @@ spellList.idList = {
     },
     -- Global
     Shared = {
-        abilities                           = {
-            giftOfTheNaaru                  = 28880,
-            global                          = 61304,
-            shadowmeld                      = 58984,
-            quakingPalm                     = 107079,
-        },
-        artifacts                           = {
-            artificialDamage                = 226829,
-            artificialStamina               = 211309,
-        },
-        buffs                               = {
-            shadowmeld                      = 58984,
+        Shared = {
+            abilities                           = {
+                giftOfTheNaaru                  = 28880,
+                global                          = 61304,
+                shadowmeld                      = 58984,
+                quakingPalm                     = 107079,
+            },
+            artifacts                           = {
+                artificialDamage                = 226829,
+                artificialStamina               = 211309,
+            },
+            buffs                               = {
+                ancientHysteria                 = 90355,
+                bloodlust                       = 2825,
+                heroism                         = 32182,
+                netherwinds                     = 160452,
+                shadowmeld                      = 58984,
+                timeWarp                        = 80353,
+            },
+            debuffs                             = {
+
+            },
+            glyphs                              = {
+
+            },
+            talents                             = {
+
+            },
         },
     },
     ClassTemplate = {
@@ -2581,39 +2689,39 @@ spellList.idList = {
 
 -- Used to merge two tables
 function spellList.mergeTables(a, b)
-	if a == nil then a = {} end
+    if a == nil then a = {} end
     if type(a) == 'table' and type(b) == 'table' then
         for k,v in pairs(b) do
-        	if type(v)=='table' and type(a[k] or false)=='table' then
-        		spellList.mergeTables(a[k],v)
-        	else
-        		a[k]=v
-        	end
+            if type(v)=='table' and type(a[k] or false)=='table' then
+                spellList.mergeTables(a[k],v)
+            else
+                a[k]=v
+            end
         end
     end
     return a
 end
 function spellList.mergeIdTables(idTable)
-	local class = select(2,UnitClass("player"))
-	local spec = GetSpecializationInfo(GetSpecialization())
-	if spellList.idList.Shared ~= nil then
-		idTable = spellList.mergeTables(idTable, spellList.idList.Shared)
-	end
-	if spellList.idList[class] ~= nil then
-		if spellList.idList[class].Shared ~= nil then
-			idTable = spellList.mergeTables(idTable, spellList.idList[class].Shared)
-			if spellList.idList[class].Shared.abilities ~= nil then
-				idTable = spellList.mergeTables(idTable, spellList.idList[class].Shared.abilities)
-			end
-		end
-		if spellList.idList[class][spec] ~= nil then
-			idTable = spellList.mergeTables(idTable, spellList.idList[class][spec])
-			if spellList.idList[class][spec].abilities ~= nil then
-				idTable = spellList.mergeTables(idTable, spellList.idList[class][spec].abilities)
-			end
-		end
-	end
-	return idTable
+    local class = select(2,UnitClass("player"))
+    local spec = GetSpecializationInfo(GetSpecialization())
+    if spellList.idList.Shared ~= nil then
+        idTable = spellList.mergeTables(idTable, spellList.idList.Shared)
+    end
+    if spellList.idList[class] ~= nil then
+        if spellList.idList[class].Shared ~= nil then
+            idTable = spellList.mergeTables(idTable, spellList.idList[class].Shared)
+            if spellList.idList[class].Shared.abilities ~= nil then
+                idTable = spellList.mergeTables(idTable, spellList.idList[class].Shared.abilities)
+            end
+        end
+        if spellList.idList[class][spec] ~= nil then
+            idTable = spellList.mergeTables(idTable, spellList.idList[class][spec])
+            if spellList.idList[class][spec].abilities ~= nil then
+                idTable = spellList.mergeTables(idTable, spellList.idList[class][spec].abilities)
+            end
+        end
+    end
+    return idTable
 end
 
 return spellList

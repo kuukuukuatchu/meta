@@ -2,7 +2,7 @@
 local meta  = ...
 local unit  = require('conditions.unit')
 local spell = require('conditions.spell')
-local spellList = require('conditions.spellList')
+local spellList = require('lists.spellList')
 
 -- Init Buff
 local cast = { }
@@ -10,9 +10,7 @@ local cast = { }
 -----------------------------------
 --- Cast Related Functions Here ---
 -----------------------------------
-local idList = {}
-idList = spellList.mergeIdTables(idList)
-for k, v in pairs(idList.abilities) do
+for k, v in pairs(castable) do
     cast[k] = function(unitCast)
         unitCast = unitCast or unit.getBest(v)
         print('|cffa330c9 [meta] |cffFFFF00 Casting: |r'..spell.name(v)..'|cffFFFF00 with Id: |r'..v..'|cffFFFF00 at: |r'..unitCast)

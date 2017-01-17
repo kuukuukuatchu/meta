@@ -1,8 +1,6 @@
 local meta      = ...
 local loader    = { }
-local rotations = { }
-
-local specID = GetSpecializationInfo(GetSpecialization())
+rotations = { }
 
 function loader.rotationsDirectory()
     return GetWoWDirectory() .. '\\Interface\\AddOns\\meta\\meta\\rotations\\'
@@ -20,23 +18,37 @@ function loader.profiles(class, spec)
     return GetDirectoryFiles(loader.rotationsDirectory() .. class .. '\\' .. spec .. '\\*.lua')
 end
 
--- Search each Class Folder in the Rotations Folder
-for _, class in pairs(loader.classDirectories()) do
-    -- Search each Spec Folder in the Class Folder
-    for _, spec in pairs(loader.specDirectories(class)) do
-        -- Search each Profile in the Spec Folder
-        for _, profile in pairs(loader.profiles(class, spec)) do
-            local rotation = require('rotations.'..class..'.'..spec..'.'..profile:sub(1, -5))
-            if rotation then
-                if rotation.profileID == specID then
-                    print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
-                    meta.magic(rotation.rotation)
-                    rotations[rotation.profileName] = rotation
+function loader.loadProfiles()
+    local specID = GetSpecializationInfo(GetSpecialization())
+    wipe(rotations)
+    -- Search each Class Folder in the Rotations Folder
+    for _, class in pairs(loader.classDirectories()) do
+        -- Search each Spec Folder in the Class Folder
+        for _, spec in pairs(loader.specDirectories(class)) do
+            -- Search each Profile in the Spec Folder
+            for _, profile in pairs(loader.profiles(class, spec)) do
+                local rotation = require('rotations.'..class..'.'..spec..'.'..profile:sub(1, -5))
+                if rotation then
+                    if rotation.profileID == specID then
+                        print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
+                        meta.magic(rotation.rotation)
+                        rotations[rotation.profileName] = rotation
+                    end
                 end
             end
         end
     end
 end
+
+loader.loadProfiles()
+
+AddEventCallback("ACTIVE_TALENT_GROUP_CHANGED", function()
+    loader.loadProfiles()
+end)
+
+-- AddEventCallback("PLAYER_ENTERING_WORLD", function()
+--     loader.loadProfiles()
+-- end)
 
 -- for debug
 _G['_rotations'] = rotations
@@ -55,8 +67,7 @@ end
 AddFrameCallback(function ()
     -- if loader.timer('runRotation',math.random(0.15, 0.3)) then
         for k, v in pairs(rotations) do
-           rotations[k].rotation()
-           break
+            rotations[k].rotation()
         end
     -- end
 end)

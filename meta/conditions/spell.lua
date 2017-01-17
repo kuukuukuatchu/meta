@@ -1,8 +1,30 @@
 -- Required to access other files.
-local meta = ...
+local meta 		= ...
+-- local base 		= require('conditions.base')
+-- local spellList = require('conditions.spellList')
 
--- Init Cast
+-- Init Spell
 local spell = { }
+-- spell.__index = spell
+
+-- function spell.new(spellID)
+--     local self = setmetatable({}, spell)
+--         self.Spell = spellID
+--     return self
+-- end
+
+-- function spell.id(self)
+--     local spellID = self.Spell
+-- 	return spellID
+-- end
+
+-- function spell.name(self)
+--     local spellID = self.Spell
+-- 	return GetSpellInfo(spellID)
+-- end
+
+-- shear = spell.new(203782)
+-- -- print(shear:name())
 
 -- Returns current world Latency
 local function latency()
@@ -18,6 +40,14 @@ end
 ------------------------------------
 --- Spell Related Functions Here ---
 ------------------------------------
+
+function spell.bestHelp(self)
+    if spell:maxRange() > 0 then
+        return 'player' -- Dynamic Assign Friendly in Range
+    else
+        return 'player' -- Default to 'player'
+    end
+end
 
 function spell.last(spellID)
 	if not lastSpell then lastSpell = 0 end

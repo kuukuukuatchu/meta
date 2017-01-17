@@ -3,8 +3,7 @@ local function rotation()
 --- Vengeance: CuteOne ---
 --------------------------
 
--- print(tostring(buff.exists('player',buff.demonSpikes)))
-if unit.exists('target') then
+if unit.valid('target') then
     -- Start Attack
         -- actions=auto_attack
         startAttack()
@@ -35,12 +34,12 @@ if unit.exists('target') then
         end
     -- Immolation Aura
         -- actions+=/immolation_aura,if=pain<=80
-        if cast.check(immolationAura) and power.amount(pain) <= 80 and unit.distance('target') < 8 then
+        if cast.check(immolationAura) and pain:amount() <= 80 and unit.distance('target') < 8 then
             cast.immolationAura()
         end
     -- Felblade
         -- actions+=/felblade,if=pain<=70
-        if cast.check(felblade) and power.amount(pain) <= 70 then
+        if cast.check(felblade) and pain:amount() <= 70 then
             cast.felblade()
         end
     -- Soul Barrier
@@ -82,12 +81,12 @@ if unit.exists('target') then
         end
     -- Fracture
         -- actions+=/fracture,if=pain>=80&soul_fragments<4&incoming_damage_4s<=health.max*0.20
-        if cast.check(fracture) and power.amount(pain) >= 80 and buff.stack('player',buff.soulFragments) < 4 then
+        if cast.check(fracture) and pain:amount() >= 80 and buff.stack('player',buff.soulFragments) < 4 then
             cast.fracture()
         end
     -- Soul Cleave
         -- actions+=/soul_cleave,if=pain>=80
-        if cast.check(soulCleave) and power.amount(pain) >= 80 then
+        if cast.check(soulCleave) and pain:amount() >= 80 then
             cast.soulCleave()
         end
     -- Shear

@@ -1,13 +1,29 @@
 -- Required to access other files.
-local meta  = ...
-local spell = require('conditions.spell')
+local meta  	= ...
+local spell 	= require('conditions.spell')
+local spellList = require('lists.spellList')
 
 -- Init Debuff
 local debuff = { }
 
 -- Get Debuff IDs for Spec
-for k, v in pairs(idList.debuffs) do
-    debuff[k] = v
+-- for k, v in pairs(idList.debuffs) do
+--     debuff[k] = v
+-- end
+for unitClass , classTable in pairs(spellList.idList) do
+    if unitClass == select(2,UnitClass('player')) or unitClass == 'Shared' then
+        for spec, specTable in pairs(classTable) do
+            if spec == GetSpecializationInfo(GetSpecialization()) or spec == 'Shared' then
+                for spellType, spellTypeTable in pairs(specTable) do
+                    if spellType == 'debuffs' then
+                        for spell, spellID in pairs(spellTypeTable) do
+                            debuff[spell] = spellID
+                        end
+                    end
+                end
+            end
+        end
+    end        
 end
 
 -----------------------------------

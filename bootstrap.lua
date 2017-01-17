@@ -1,7 +1,8 @@
 local addonName, meta = ...
 
 C_Timer.After(1, function()
-    if FireHack then
+    -- if FireHack then
+    if GetFireHackVersion () then
         print('|cffa330c9[meta] |r FireHack Detected, Loading...')
         local baseFolder = GetWoWDirectory() .. '\\Interface\\AddOns\\meta\\'
         function require(fileResolver, ...)
