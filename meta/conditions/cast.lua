@@ -13,7 +13,7 @@ local cast = { }
 for k, v in pairs(castable) do
     cast[k] = function(unitCast)
         unitCast = unitCast or unit.getBest(v)
-        print('|cffa330c9 [meta] |cffFFFF00 Casting: |r'..spell.name(v)..'|cffFFFF00 with Id: |r'..v..'|cffFFFF00 at: |r'..unitCast)
+        --print('|cffa330c9 [meta] |cffFFFF00 Casting: |r'..spell.name(v)..'|cffFFFF00 with Id: |r'..v..'|cffFFFF00 at: |r'..unitCast)
         -- print('Casting '..spell.name(v)..' with Id: '..v..' at: '..unitCast)
         if not IsAoEPending() then
             CastSpellByName(spell.name(v),unitCast)

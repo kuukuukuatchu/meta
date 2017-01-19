@@ -1,6 +1,6 @@
 local meta      = ...
 local loader    = { }
-rotations = { }
+local rotations = { }
 
 function loader.rotationsDirectory()
     return GetWoWDirectory() .. '\\Interface\\AddOns\\meta\\meta\\rotations\\'
@@ -65,6 +65,7 @@ function loader.timer(timerName,timerLength)
     end
 end
 AddFrameCallback(function ()
+    -- Initialize Rotation
     -- if loader.timer('runRotation',math.random(0.15, 0.3)) then
         for k, v in pairs(rotations) do
             rotations[k].rotation()

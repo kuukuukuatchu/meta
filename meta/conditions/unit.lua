@@ -41,9 +41,9 @@ end
 
 function unit.bestHarm(spellID)
     if spell.maxRange(spellID) > 0 then
-        return 'target' -- Dynamic Assign Enemy in Range
+        return enemies.target(spell.maxRange(spellID),true) -- Dynamic Assign Enemy in Range
     else
-        return 'target' -- Default to Melee Range
+        return enemies.target(5,true) -- Default to Melee Range
     end
 end
 
@@ -58,11 +58,9 @@ end
 function unit.getBest(spellID)
     if spell.help(spellID) and not spell.harm(spellID) then
         return unit.bestHelp(spellID)
-    end
-    if spell.harm(spellID) then
+    elseif spell.harm(spellID) and not spell.help(spellID) then
         return unit.bestHarm(spellID)
-    end
-    if not spell.help(spellID) and not spell.harm(spellID) then
+    else
         return unit.bestNone(spellID)
     end
 end
@@ -196,20 +194,26 @@ end
 function unit.inRange(spellID,unitCheck)
 	local spellName = spell.name(spellID)
 	if not SpellHasRange(spellName) then
-		return unit.distance(unitCheck) < 5
-	else
+        if unit.distance(unitCheck) >= 5 and spell.usable(spellID) then
+            return true
+        else
+            return unit.distance(unitCheck) < 5
+        end
+	elseif not IsSpellInRange(spellName,unitCheck) then
+        return unit.distance(unitCheck) < spell.maxRange(spellID)
+    else
     	return IsSpellInRange(spellName,unitCheck) == 1
 	end
 end
 
 function unit.friend(unit1,unit2)
     local unit2 = unit2 or 'player'
-    return UnitIsFriend(unit1,unit1) ~= nil
+    return UnitIsFriend(unit1,unit2)
 end
 
 function unit.enemy(unit1,unit2)
     local unit2 = unit2 or 'player'
-    return UnitIsEnemy(unit1,unit1) ~= nil
+    return UnitIsEnemy(unit1,unit2)
 end
 
 function unit.dead(unit)
@@ -236,13 +240,67 @@ function unit.dummy(unitCheck)
     return dummyList.dummies[tonumber(string.match(UnitGUID(unitCheck),"-(%d+)-%x+$"))] ~= nil
 end
 
+function unit.health(unit)
+    return UnitHealth(unit)
+end
+
+function unit.healthMax(unit)
+    return UnitHealthMax(unit)
+end
+
+function unit.hp(thisUnit)
+    if unit.exists(unit) then
+        return 100*unit.health(thisUnit)/unit.healthMax(thisUnit)
+    end
+    return 0    
+end
+
 function unit.valid(unitCheck)
-    if unit.exists(unitCheck) and not unit.dead(unitCheck) and (not unit.friend(unitCheck) or base.inPvp() or unit.dummy(unitCheck)) 
+    if unit.exists(unitCheck) and not unit.dead(unitCheck) and (not unit.friend(unitCheck) or base.inPvp()) 
         and unit.canAttack(unitCheck) and not unit.trivial(unitCheck) and (unit.isUnit(unitCheck,'target') or UnitCreatureType(unitCheck) ~= "Totem") 
     then
-        if not base.combat("player") and not IsInInstance() and (unit.distance(unitCheck) <= 20 or unit.isUnit(unitCheck,'target')) then return true end
+        if not base.combat("player") and not IsInInstance() and (unit.distance(unitCheck) <= 40 or unit.isUnit(unitCheck,'target')) then return true end
         if not base.combat("player") and not IsInInstance() and (unit.hasThreat(unitCheck) or unit.isUnit(unitCheck,'target')) then return true end
         if base.combat("player") and (unit.hasThreat(unitCheck) or unit.isUnit(unitCheck,'target') or (unit.dummy(unitCheck) and unit.distance(unitCheck) <= 20)) then return true end
+    end
+    return false
+end
+
+function unit.instanceBoss(thisUnit)
+    if IsInInstance() then
+        local lockTimeleft, isPreviousInstance, encountersTotal, encountersComplete = GetInstanceLockTimeRemaining();
+        for i=1,encountersTotal do
+            if unit.exists(thisUnit) then
+                local bossName = GetInstanceLockTimeRemainingEncounter(i)
+                local targetName = UnitName(thisUnit)
+                -- Print("Target: "..targetName.." | Boss: "..bossName.." | Match: "..tostring(targetName == bossName))
+                if targetName == bossName then return true end
+            end
+        end
+        for i = 1, 5 do
+            local bossNum = "boss"..i
+            if unit.isUnit(bossNum,thisUnit) then return true end
+        end
+    end
+    return false
+end
+
+function unit.isBoss(thisUnit)
+    if unit.exists(thisUnit) then
+        local bossCheck = unit.instanceBoss(thisUnit)
+        local npcID = string.match(UnitGUID(thisUnit),"-(%d+)-%x+$")
+        if bossCheck or unit.dummy(thisUnit) then
+            return true
+        elseif ((UnitClassification(thisUnit) == "rare" and unit.healthMax(thisUnit)>(4*unit.healthMax("player")))
+            or UnitClassification(thisUnit) == "rareelite" 
+            or UnitClassification(thisUnit) == "worldboss" 
+            or (UnitClassification(thisUnit) == "elite" and unit.healthMax(thisUnit)>(4*unit.healthMax("player")) and select(2,IsInInstance())~="raid")--UnitLevel(unit) >= UnitLevel("player")+3) 
+            or UnitLevel(thisUnit) < 0)
+                and not UnitIsTrivial(thisUnit)
+                and select(2,IsInInstance())~="party"
+        then
+            return true
+        end
     end
     return false
 end

@@ -26,8 +26,8 @@ function talent.info()
 			                for spellType, spellTypeTable in pairs(specTable) do
 			                    if spellType == 'talents' then
 			                        for spell, spellID in pairs(spellTypeTable) do
-			                        	if spellID == talentID then 
-			                        		talent[k] = selected
+			                        	if spellID == talentID then
+			                        		talent[spell] = selected
 			                        		if not IsPassiveSpell(spellID) then
 			                            		base[spell] = spellID
 			                            		castable[spell] = spellID

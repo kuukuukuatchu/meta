@@ -19,6 +19,10 @@ function power.max(self)
     return UnitPowerMax('player',self.Power)
 end
 
+function power.deficit(self)
+	return UnitPowerMax('player',self.Power) - UnitPower('player',self.Power)
+end
+
 mana            = power.new(SPELL_POWER_MANA)
 rage            = power.new(SPELL_POWER_RAGE)
 focus           = power.new(SPELL_POWER_FOCUS)

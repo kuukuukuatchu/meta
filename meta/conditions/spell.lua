@@ -129,5 +129,35 @@ function spell.charges(spellID)
 	return select(1,GetSpellCharges(spellID))
 end
 
+function spell.chargesFrac(spellID,chargeMax)
+	local charges,maxCharges,start,duration = GetSpellCharges(spellID)
+	if chargeMax == nil then chargeMax = false end
+	if maxCharges ~= nil then
+		if chargeMax then 
+			return maxCharges 
+		else
+			if start <= GetTime() then
+				local endTime = start + duration
+				local percentRemaining = 1 - (endTime - GetTime()) / duration
+				return charges + percentRemaining
+			else
+				return charges
+			end
+		end
+	end
+	return 0
+end
+
+function spell.recharge(spellID)
+	local charges,maxCharges,chargeStart,chargeDuration = GetSpellCharges(spellID)
+	if charges then
+		if charges < maxCharges then
+			chargeEnd = chargeStart + chargeDuration
+			return chargeEnd - GetTime()
+		end
+		return 0
+	end
+end
+
 -- Return Functions
 return spell
