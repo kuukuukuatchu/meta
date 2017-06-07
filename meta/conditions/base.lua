@@ -10,15 +10,35 @@ castable = {}
 -- for k, v in pairs(spellList.idList) do
 --     base[k] = v
 -- end
+-- for unitClass , classTable in pairs(spellList.idList) do
+--     if unitClass == select(2,UnitClass('player')) or unitClass == 'Shared' then
+--         for spec, specTable in pairs(classTable) do
+--             if spec == GetSpecializationInfo(GetSpecialization()) or spec == 'Shared' then
+--                 for spellType, spellTypeTable in pairs(specTable) do
+--                     if spellType == 'abilities' then
+--                         for spell, spellID in pairs(spellTypeTable) do
+--                             base[spell] = spellID
+--                             castable[spell] = spellID
+--                         end
+--                     end
+--                 end
+--             end
+--         end
+--     end        
+-- end
+-- for k, v in pairs(idList) do
+-- 	base[k] = spell.new(v) -- Objectify these spells
+-- end
+
 for unitClass , classTable in pairs(spellList.idList) do
     if unitClass == select(2,UnitClass('player')) or unitClass == 'Shared' then
         for spec, specTable in pairs(classTable) do
             if spec == GetSpecializationInfo(GetSpecialization()) or spec == 'Shared' then
                 for spellType, spellTypeTable in pairs(specTable) do
                     if spellType == 'abilities' then
-                        for spell, spellID in pairs(spellTypeTable) do
-                            base[spell] = spellID
-                            castable[spell] = spellID
+                        for spellRef, spellID in pairs(spellTypeTable) do
+                            base[spellRef] = spell.new(spellID)
+                            castable[spellRef] = spellID
                         end
                     end
                 end
@@ -26,9 +46,6 @@ for unitClass , classTable in pairs(spellList.idList) do
         end
     end        
 end
--- for k, v in pairs(idList) do
--- 	base[k] = spell.new(v) -- Objectify these spells
--- end
 
 -- Tag print return with [Name] - Colored to current class.
 local function join(...)

@@ -2,6 +2,18 @@ local meta      = ...
 local loader    = { }
 local rotations = { }
 
+SLASH_META1 = '/meta'
+if metaToggle == nil then metaToggle = 0 end
+function SlashCmdList.META(msg, editBox)
+    if metaToggle == 0 then
+        metaToggle = 1;
+        return print("|cffa330c9[meta] |r Rotation |cff00FF00 Enabled")
+    else
+        metaToggle = 0;
+        return print("|cffa330c9[meta] |r Rotation |cffFF0000 Disabled")
+    end
+end
+
 function loader.rotationsDirectory()
     return GetWoWDirectory() .. '\\Interface\\AddOns\\meta\\meta\\rotations\\'
 end
@@ -31,6 +43,8 @@ function loader.loadProfiles()
                 if rotation then
                     if rotation.profileID == specID then
                         print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
+                        if metaToggle == 0 then print("|cffa330c9[meta] |r Rotation Status:|cffFF0000 Disabled") end
+                        if metaToggle == 1 then print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled") end
                         meta.magic(rotation.rotation)
                         rotations[rotation.profileName] = rotation
                     end

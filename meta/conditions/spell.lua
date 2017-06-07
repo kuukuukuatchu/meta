@@ -1,27 +1,43 @@
 -- Required to access other files.
 local meta 		= ...
 -- local base 		= require('conditions.base')
--- local spellList = require('conditions.spellList')
+-- local spellList = require('lists.spellList')
 
 -- Init Spell
 local spell = { }
--- spell.__index = spell
+spell.__index = spell
 
--- function spell.new(spellID)
---     local self = setmetatable({}, spell)
---         self.Spell = spellID
---     return self
--- end
+function spell.new(spellID)
+    local self = setmetatable({}, spell)
+        self.Spell = spellID
+    return self
+end
 
--- function spell.id(self)
---     local spellID = self.Spell
--- 	return spellID
--- end
+function spell.object(spellID)
+	for k, v in pairs(spell) do
+		if spell[k].Spell == spellID then
+			return k
+		end
+	end
+end
 
--- function spell.name(self)
---     local spellID = self.Spell
--- 	return GetSpellInfo(spellID)
--- end
+function spell.id(self)
+	-- local spellID = self.Spell
+	if self == nil then return 0 end
+	return self.Spell
+end
+
+function spell.info(self)
+	if type(self) == "number" then
+		return GetSpellInfo(self)
+	else
+		return GetSpellInfo(self.Spell)
+	end
+end
+
+function spell.name(self)
+	return select(1,spell.info(self))
+end
 
 -- shear = spell.new(203782)
 -- -- print(shear:name())
@@ -42,24 +58,25 @@ end
 ------------------------------------
 
 function spell.bestHelp(self)
-    if spell:maxRange() > 0 then
+    if spell.maxRange(self) > 0 then
         return 'player' -- Dynamic Assign Friendly in Range
     else
         return 'player' -- Default to 'player'
     end
 end
 
-function spell.last(spellID)
+function spell.last(self)
 	if not lastSpell then lastSpell = 0 end
-	if not spellID then
+	if self == nil then
 		return lastSpell
 	else
-		lastSpell = spellID
+		lastSpell = spell.id(self)
 	end
 end
 
 -- Returns current seconds remaining on cooldown accounting for latency
-function spell.cd(spellID)
+function spell.cd(self)
+	local spellID = spell.id(self)
     if GetSpellCooldown(spellID) == 0 then
 		return 0
 	else
@@ -71,92 +88,123 @@ function spell.cd(spellID)
 end
 
 function spell.gcd()
-	return spell.cd(61304)
+	return spell.cd(global)
 end
 
-function spell.name(spellID)
-	local spellName = GetSpellInfo(spellID)
-	return spellName
+function spell.help(self)
+	local spellName = spell.name(self)
+    return IsHarmfulSpell(spellName) == nil
 end
 
-function spell.help(spellID)
-	local spellName = spell.name(spellID)
-    return IsHelpfulSpell(spellName) ~= nil
-end
-
-function spell.harm(spellID)
-	local spellName = spell.name(spellID)
+function spell.harm(self)
+	local spellName = spell.name(self)
     return IsHarmfulSpell(spellName) ~= nil
 end
 
-function spell.id(spellName)
-	return select(7,GetSpellInfo(spellName))
+function spell.inSpellbook(self)
+	return GetSpellBookItemInfo(spell.name(self)) ~= nil
 end
 
-function spell.inSpellbook(spellID)
-	return GetSpellBookItemInfo(spell.name(spellID)) ~= nil
-end
-
-function spell.playerSpell(spellID)
+function spell.playerSpell(self)
+	local spellID = spell.id(self)
 	return IsPlayerSpell(tonumber(spellID))
 end
 
-function spell.known(spellID)
-	return spell.inSpellbook(spellID) or spell.playerSpell(spellID)
+function spell.known(self)
+	local spellID = spell.id(self)
+	return spell.inSpellbook(self) or spell.playerSpell(self) or IsSpellKnown(spellID)
 end
 
-function spell.minRange(spellID)
-	return select(5, GetSpellInfo(spellID))
+function spell.minRange(self)
+	return select(5, spell.info(self))
 end
 
-function spell.maxRange(spellID)
-	return select(6, GetSpellInfo(spellID))
+function spell.maxRange(self)
+	return select(6, spell.info(self))
 end
 
-function spell.castable(spellID)
+function spell.castable(self)
+	local spellID = spell.id(self)
 	return select(1, IsUsableSpell(spellID))
 end
 
-function spell.hasResources(spellID)
+function spell.casting(thisUnit)
+	if UnitCastingInfo(thisUnit) ~= nil or UnitChannelInfo(thisUnit) ~= nil then
+		return true
+	end
+	return false
+end
+
+function spell.canInterrupt(thisUnit)
+	if spell.casting(thisUnit) then
+		if UnitCastingInfo(thisUnit) ~= nil and select(6,UnitCastingInfo(thisUnit)) and not select(9,UnitCastingInfo(thisUnit)) then --Get spell cast time
+			castStartTime = select(5,UnitCastingInfo(thisUnit))
+			castEndTime = select(6,UnitCastingInfo(thisUnit))
+			castType = "spellcast"
+		elseif UnitChannelInfo(thisUnit) ~= nil and select(6,UnitChannelInfo(thisUnit)) and not select(8,UnitChannelInfo(thisUnit)) then -- Get spell channel time
+			castStartTime = select(5,UnitChannelInfo(thisUnit))
+			castEndTime = select(6,UnitChannelInfo(thisUnit))
+			castType = "spellchannel"
+		else
+			castStartTime = 0
+			castEndTime = 0
+		end
+		if castEndTime > 0 and castStartTime > 0 then
+			castDuration = (castEndTime - castStartTime)/1000
+			castTimeRemain = ((castEndTime/1000) - GetTime())
+		else
+			castDuration = 0
+			castTimeRemain = 0
+		end
+		if (castType == "spellcast" and (castTimeRemain/castDuration)*100 < 90) or (castType == "spellchannel" and (castTimeRemain/castDuration)*100 < 99) then
+			return true
+		end
+	end
+	return false
+end
+
+function spell.hasResources(self)
+	local spellID = spell.id(self)
 	return not select(2, IsUsableSpell(spellID))
 end
 
-function spell.usable(spellID)
-    return spell.castable(spellID) and spell.hasResources(spellID)
+function spell.usable(self)
+    return spell.castable(self) and spell.hasResources(self)
 end
 
-function spell.charges(spellID)
-	return select(1,GetSpellCharges(spellID))
+function spell.charges(self)
+	return select(1,spell.GetSpellCharges(self:id()))
 end
 
-function spell.chargesFrac(spellID,chargeMax)
-	local charges,maxCharges,start,duration = GetSpellCharges(spellID)
-	if chargeMax == nil then chargeMax = false end
+function spell.chargesMax(self)
+	return select(2,spell.GetSpellCharges(self:id()))
+end
+
+function spell.chargesFrac(self)
+	local spellID = spell.id(self)
+	local charges,maxCharges,start,duration = GetSpellCharges(self:id())
+	local endTime = start + duration
+	local percentRemaining = 1 - (endTime - GetTime()) / duration
 	if maxCharges ~= nil then
-		if chargeMax then 
-			return maxCharges 
+		if start <= GetTime() then
+			return charges + percentRemaining
 		else
-			if start <= GetTime() then
-				local endTime = start + duration
-				local percentRemaining = 1 - (endTime - GetTime()) / duration
-				return charges + percentRemaining
-			else
-				return charges
-			end
+			return charges
 		end
 	end
 	return 0
 end
 
-function spell.recharge(spellID)
-	local charges,maxCharges,chargeStart,chargeDuration = GetSpellCharges(spellID)
-	if charges then
+function spell.recharge(self)
+	local spellID = spell.id(self)
+	local charges,maxCharges,start,duration = GetSpellCharges(self:id())
+	local chargeEnd = chargeStart + chargeDuration
+	if maxCharges ~= nil then
 		if charges < maxCharges then
-			chargeEnd = chargeStart + chargeDuration
 			return chargeEnd - GetTime()
 		end
-		return 0
 	end
+	return 0
 end
 
 -- Return Functions

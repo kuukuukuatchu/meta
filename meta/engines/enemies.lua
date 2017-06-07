@@ -51,7 +51,7 @@ function enemies.update()
 				local thisUnit 			= k
 				enemies[k].name 		= UnitName(thisUnit)
 				enemies[k].guid 		= UnitGUID(thisUnit)
-				enemies[k].id 			= ObjectID(thisUnit)
+				enemies[k].id 			= unit.id(thisUnit)
 				enemies[k].unit 		= thisUnit
 			end
 		end

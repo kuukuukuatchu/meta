@@ -1,8 +1,9 @@
 -- Required to access other files.
-local meta      = ...
-local base      = require('conditions.base')
-local spell     = require('conditions.spell')
-local dummyList = require('lists.dummyList')
+local meta          = ...
+local base          = require('conditions.base')
+local spell         = require('conditions.spell')
+local dummyList     = require('lists.dummyList')
+local skipLoSList   = require('lists.skipLoSList')
 
 -- Init Unit
 local unit = { }
@@ -26,28 +27,37 @@ local unit = { }
 --     return not UnitCastingInfo(self.Unit) or not UnitChannelInfo(self.Unit)
 -- end
 
-function unit.casting(unitCheck)
-    unitCheck = unitCheck or 'player'
-    return UnitCastingInfo(unitCheck) ~= nil or UnitChannelInfo(unitCheck) ~= nil
+function unit.name(unitCheck)
+    return UnitName(unitCheck)
 end
 
-function unit.bestHelp(spellID)
-    if spell.maxRange(spellID) > 0 then
+function unit.casting(unitCheck,spellID)
+    unitCheck = unitCheck or 'player'
+    if spellID == nil then 
+        return UnitCastingInfo(unitCheck) ~= nil or UnitChannelInfo(unitCheck) ~= nil
+    else
+        if UnitCastingInfo(unitCheck) ~= nil then return UnitCastingInfo(unitCheck) == spell.name(spellID) end
+        if UnitChannelInfo(unitCheck) ~= nil then return UnitChannelInfo(unitCheck) == spell.name(spellID) end
+    end  
+end
+
+function unit.bestHelp(self)
+    if spell.maxRange(self) > 0 then
         return 'player' -- Dynamic Assign Friendly in Range
     else
         return 'player' -- Default to 'player'
     end
 end
 
-function unit.bestHarm(spellID)
-    if spell.maxRange(spellID) > 0 then
-        return enemies.target(spell.maxRange(spellID),true) -- Dynamic Assign Enemy in Range
+function unit.bestHarm(self)
+    if spell.maxRange(self) > 0 then
+        return enemies.target(spell.maxRange(self),true) -- Dynamic Assign Enemy in Range
     else
         return enemies.target(5,true) -- Default to Melee Range
     end
 end
 
-function unit.bestNone(spellID)
+function unit.bestNone()
     if unit.exists('target') then
         return 'target'
     else
@@ -55,13 +65,16 @@ function unit.bestNone(spellID)
     end
 end
 
-function unit.getBest(spellID)
-    if spell.help(spellID) and not spell.harm(spellID) then
-        return unit.bestHelp(spellID)
-    elseif spell.harm(spellID) and not spell.help(spellID) then
-        return unit.bestHarm(spellID)
-    else
-        return unit.bestNone(spellID)
+function unit.getBest(self)
+    if self ~= nil then
+        local spellID = spell.id(self)
+        if spell.help(self) and not spell.harm(self) then
+            return unit.bestHelp(self)
+        elseif spell.harm(self) and not spell.help(self) then
+            return unit.bestHarm(self)
+        else
+            return unit.bestNone()
+        end
     end
 end
 
@@ -87,23 +100,9 @@ end
 
 function unit.noSightValid(unit1,unit2)
     unit2 = unit2 or 'player'
-    local skipLoSTable = {
-        76585, 	-- Ragewing
-        77692, 	-- Kromog
-        77182, 	-- Oregorger
-        96759, 	-- Helya
-        100360,	-- Grasping Tentacle (Helya fight)
-        100354,	-- Grasping Tentacle (Helya fight)
-        100362,	-- Grasping Tentacle (Helya fight)
-        98363,	-- Grasping Tentacle (Helya fight)
-        98696, 	-- Illysanna Ravencrest (Black Rook Hold)
-        114900, -- Grasping Tentacle (Trials of Valor)
-        114901, -- Gripping Tentacle (Trials of Valor)
-        116195, -- Bilewater Slime (Trials of Valor)
-        --86644, -- Ore Crate from Oregorger boss
-    }
-    for i = 1,#skipLoSTable do
-        if unit.id(unit1) == skipLoSTable[i] or unit.id(unit2) == skipLoSTable[i] then
+    for i = 1,#skipLoSList do
+        local thisUnit = skipLoSList[i]
+        if unit.id(unit1) == thisUnit or unit.id(unit2) == thisUnit then
             return true
         end
     end
@@ -191,16 +190,16 @@ function unit.facing(unit1,unit2,degree)
     end
 end
 
-function unit.inRange(spellID,unitCheck)
-	local spellName = spell.name(spellID)
+function unit.inRange(self,unitCheck)
+	local spellName = spell.name(self)
 	if not SpellHasRange(spellName) then
-        if unit.distance(unitCheck) >= 5 and spell.usable(spellID) then
+        if unit.distance(unitCheck) >= 5 and spell.usable(self) then
             return true
         else
             return unit.distance(unitCheck) < 5
         end
 	elseif not IsSpellInRange(spellName,unitCheck) then
-        return unit.distance(unitCheck) < spell.maxRange(spellID)
+        return unit.distance(unitCheck) < spell.maxRange(self)
     else
     	return IsSpellInRange(spellName,unitCheck) == 1
 	end
@@ -249,7 +248,7 @@ function unit.healthMax(unit)
 end
 
 function unit.hp(thisUnit)
-    if unit.exists(unit) then
+    if unit.exists(thisUnit) then
         return 100*unit.health(thisUnit)/unit.healthMax(thisUnit)
     end
     return 0    
@@ -259,8 +258,8 @@ function unit.valid(unitCheck)
     if unit.exists(unitCheck) and not unit.dead(unitCheck) and (not unit.friend(unitCheck) or base.inPvp()) 
         and unit.canAttack(unitCheck) and not unit.trivial(unitCheck) and (unit.isUnit(unitCheck,'target') or UnitCreatureType(unitCheck) ~= "Totem") 
     then
-        if not base.combat("player") and not IsInInstance() and (unit.distance(unitCheck) <= 40 or unit.isUnit(unitCheck,'target')) then return true end
-        if not base.combat("player") and not IsInInstance() and (unit.hasThreat(unitCheck) or unit.isUnit(unitCheck,'target')) then return true end
+        if not base.combat("player") and not IsInInstance() and (unit.distance(unitCheck) <= 20 or unit.isUnit(unitCheck,'target')) then return true end
+        if not base.combat("player") and not IsInInstance() and (unit.hasThreat(unitCheck) or (unit.groupCount() == 1 and unit.isUnit(unitCheck,'target'))) then return true end
         if base.combat("player") and (unit.hasThreat(unitCheck) or unit.isUnit(unitCheck,'target') or (unit.dummy(unitCheck) and unit.distance(unitCheck) <= 20)) then return true end
     end
     return false
@@ -288,13 +287,12 @@ end
 function unit.isBoss(thisUnit)
     if unit.exists(thisUnit) then
         local bossCheck = unit.instanceBoss(thisUnit)
-        local npcID = string.match(UnitGUID(thisUnit),"-(%d+)-%x+$")
         if bossCheck or unit.dummy(thisUnit) then
             return true
         elseif ((UnitClassification(thisUnit) == "rare" and unit.healthMax(thisUnit)>(4*unit.healthMax("player")))
             or UnitClassification(thisUnit) == "rareelite" 
             or UnitClassification(thisUnit) == "worldboss" 
-            or (UnitClassification(thisUnit) == "elite" and unit.healthMax(thisUnit)>(4*unit.healthMax("player")) and select(2,IsInInstance())~="raid")--UnitLevel(unit) >= UnitLevel("player")+3) 
+            or (UnitClassification(thisUnit) == "elite" and unit.healthMax(thisUnit)>(4*unit.healthMax("player")) and select(2,IsInInstance())~="raid")
             or UnitLevel(thisUnit) < 0)
                 and not UnitIsTrivial(thisUnit)
                 and select(2,IsInInstance())~="party"
@@ -303,6 +301,15 @@ function unit.isBoss(thisUnit)
         end
     end
     return false
+end
+
+function unit.race(thisUnit)
+    return select(2,UnitRace(thisUnit))
+end
+
+-- Return Combat for Unit - True/False
+function unit.combat(thisUnit)
+    return UnitAffectingCombat(thisUnit) ~= nil
 end
 
 -- Return Functions
