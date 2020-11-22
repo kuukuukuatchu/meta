@@ -4,7 +4,8 @@
 ## SavedVariables: metaSaved
 
 #@no-lib-strip@
-System\Libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
+
+#meta\libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
 #@end-no-lib-strip@
 
 bootstrap.lua

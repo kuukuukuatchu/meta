@@ -32,25 +32,32 @@ end
 
 function loader.loadProfiles()
     local specID = GetSpecializationInfo(GetSpecialization())
+    local rotationFound = false
     wipe(rotations)
     -- Search each Class Folder in the Rotations Folder
     for _, class in pairs(loader.classDirectories()) do
-        -- Search each Spec Folder in the Class Folder
-        for _, spec in pairs(loader.specDirectories(class)) do
-            -- Search each Profile in the Spec Folder
-            for _, profile in pairs(loader.profiles(class, spec)) do
-                local rotation = require('rotations.'..class..'.'..spec..'.'..profile:sub(1, -5))
-                if rotation then
-                    if rotation.profileID == specID then
-                        print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
-                        if metaToggle == 0 then print("|cffa330c9[meta] |r Rotation Status:|cffFF0000 Disabled") end
-                        if metaToggle == 1 then print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled") end
-                        meta.magic(rotation.rotation)
-                        rotations[rotation.profileName] = rotation
+        if class ~= "." and class ~= ".." then
+            -- Search each Spec Folder in the Class Folder
+            for _, spec in pairs(loader.specDirectories(class)) do
+                -- Search each Profile in the Spec Folder
+                for _, profile in pairs(loader.profiles(class, spec)) do
+                    local rotation = require('rotations.'..class..'.'..spec..'.'..profile:sub(1, -5))
+                    if rotation then
+                        if rotation.profileID == specID then
+                            if rotationFound == false then rotationFound = true end
+                            print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
+                            if metaToggle == 0 then print("|cffa330c9[meta] |r Rotation Status:|cffFF0000 Disabled") end
+                            if metaToggle == 1 then print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled") end
+                            meta.magic(rotation.rotation)
+                            rotations[rotation.profileName] = rotation
+                        end
                     end
                 end
             end
         end
+    end
+    if not rotationFound then
+        print('|cffa330c9[meta] |r No Rotation Found For Spec: |cFFFF0000' .. specID)
     end
 end
 
@@ -67,7 +74,7 @@ end)
 -- for debug
 _G['_rotations'] = rotations
 
--- run rotation
+--run rotation
 local timer = {}
 function loader.timer(timerName,timerLength)
     if timer[timerName] == nil then timer[timerName] = 0 end

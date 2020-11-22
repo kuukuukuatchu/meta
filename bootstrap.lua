@@ -1,15 +1,15 @@
 local addonName, meta = ...
 
 C_Timer.After(1, function()
-    if FireHack then
+    if EasyWoWToolbox then
     -- if GetFireHackVersion () then
-        print('|cffa330c9[meta] |r FireHack Detected, Loading...')
+        print('|cffa330c9[meta] |r EWT Detected, Loading...')
         local baseFolder = GetWoWDirectory() .. '\\Interface\\AddOns\\meta\\'
         function require(fileResolver, ...)
             local filepath = string.gsub(fileResolver, "[.]", "\\")
             local lua = ReadFile(baseFolder .. 'meta\\' .. filepath .. '.lua')
             if not lua then
-                print('|cffa330c9[meta] |r Load LUA files failed.')
+                print('|cffa330c9[meta] |r Load LUA files failed. ')
                 return nil
             end
             local lambda, fault = loadstring(lua, fileResolver)
@@ -24,6 +24,6 @@ C_Timer.After(1, function()
         print('|cffa330c9[meta] |r Load Complete.')
         require('init')
     else
-        print('|cffa330c9[meta] |r Load FireHack.')
+        print('|cffa330c9[meta] |r Load Unlocker.')
     end
 end)

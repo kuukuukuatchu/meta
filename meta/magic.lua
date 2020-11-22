@@ -15,7 +15,7 @@ magic.power     = require('conditions.power')
 magic.spell     = require('conditions.spell')
 magic.talent 	= require('conditions.talent')
 magic.unit      = require('conditions.unit')
-magic.artifact 	= require('engines.artifact')
+--magic.artifact 	= require('engines.artifact')
 magic.enemies 	= require('engines.enemies')
 
 return function(func)

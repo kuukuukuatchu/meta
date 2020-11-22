@@ -13,7 +13,7 @@ function enemies.engine()
 		--local thisUnit = GetObjectIndex(i)
         local thisUnit = GetObjectWithIndex(i)
 		-- check if it a unit first
-        if ObjectIsType(thisUnit, ObjectTypes.Unit)  then
+        if ObjectIsUnit(thisUnit)  then
 			-- sanity checks
 			if unit.valid(thisUnit) then
 				local unitName 			= UnitName(thisUnit)
