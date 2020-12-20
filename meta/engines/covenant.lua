@@ -1,6 +1,5 @@
 local meta 		= ...
 local base 		= require('conditions.base')
-local spellList = require('lists.spellList')
 
 -- Init Base
 local covenant      = { }

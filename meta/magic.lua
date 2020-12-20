@@ -18,6 +18,7 @@ magic.unit      = require('conditions.unit')
 --magic.artifact 	= require('engines.artifact')
 magic.covenant  = require('engines.covenant')
 magic.conduit  = require('engines.conduit')
+magic.runeforge = require('engines.runeforge')
 magic.enemies 	= require('engines.enemies')
 
 return function(func)
