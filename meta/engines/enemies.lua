@@ -2,42 +2,40 @@
 local meta  = ...
 local base 	= require('conditions.base')
 local unit 	= require('conditions.unit')
+local om = require('engines.om')
 
 -- Init Enemies
 enemies = { }
 
 -- Collect Enemies
 function enemies.engine()
-	for i = 1, ObjectCount() do
+	for  k,v in pairs(om) do
 		-- define our unit
 		--local thisUnit = GetObjectIndex(i)
-        local thisUnit = GetObjectWithIndex(i)
-		-- check if it a unit first
-        if ObjectIsUnit(thisUnit)  then
-			-- sanity checks
-			if unit.valid(thisUnit) then
-				local unitName 			= UnitName(thisUnit)
-				local unitID 			= ObjectID(thisUnit)
-				local unitGUID 			= UnitGUID(thisUnit)
-                -- Check if Enemy exists already and update info.
-                local addEnemy
-				if addEnemy == nil then addEnemy = true end
-				if enemies ~= nil then
-					for k, v in pairs(enemies) do
-						if k == thisUnit then
-							addEnemy = false
-							break
-						end
+        local thisUnit = k
+		-- sanity checks
+		if unit.valid(thisUnit) then
+			local unitName 			= UnitName(thisUnit)
+			local unitID 			= ObjectID(thisUnit)
+			local unitGUID 			= UnitGUID(thisUnit)
+			-- Check if Enemy exists already and update info.
+			local addEnemy
+			if addEnemy == nil then addEnemy = true end
+			if enemies ~= nil then
+				for k, v in pairs(enemies) do
+					if k == thisUnit then
+						addEnemy = false
+						break
 					end
 				end
-				-- If not then add enemy
-				if addEnemy then							
-					enemies[thisUnit] 	= {
-						name 			= unitName,
-						guid 			= unitGUID,
-						id 				= unitID,
-					}
-				end
+			end
+			-- If not then add enemy
+			if addEnemy then							
+				enemies[thisUnit] 	= {
+					name 			= unitName,
+					guid 			= unitGUID,
+					id 				= unitID,
+				}
 			end
 		end
 	end
