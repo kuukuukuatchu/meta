@@ -18,7 +18,11 @@ function omUpdate()
             if ObjectIsUnit(thisUnit)  then
                 -- sanity checks
                 if unit.distance('player',thisUnit) <= 50 then
-                    tinsert(om, thisUnit)
+                    om[thisUnit] 	= {
+                        name 			= unitName,
+                        guid 			= unitGUID,
+                        id 				= unitID,
+                    }
                 end
             end
         end
@@ -41,7 +45,6 @@ function omUpdate()
                         id 				= unitID,
                     }
                 end
-            else om[v] = 1
             end
         end
     end
@@ -49,21 +52,12 @@ function omUpdate()
         --print('Removed ' .. v)
         om[v] = nil
     end
-    -- local manualCount = 0
-    -- for k,v in pairs(om) do
-    --     manualCount = manualCount + 1
-    -- end
-    -- if #added ~= 0 or #removed ~= 0 then
-    --     print('Total ' .. total .. ' ' .. #added .. ' ' .. #removed .. ' Manual ' .. manualCount)
-    -- end
 end
 
 -- Build Friends
 AddFrameCallback(function ()
     -- Initialize Friends Engine
-	omUpdate()
-	--friends.update()
-	--friends.cleanup()
+    omUpdate()
 end)
 
 return om
