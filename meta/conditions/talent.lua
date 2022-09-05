@@ -2,6 +2,7 @@
 local meta  	= ...
 local base 		= require('conditions.base')
 local spellList = require('lists.spellList')
+local events = meta.events
 
 -- Init Talent
 local talent = { }
@@ -47,7 +48,7 @@ end
 -- Update Talent Info on Init and Talent Change
 talent.info()
 
-AddEventCallback("PLAYER_TALENT_UPDATE",function()
+events.register_callback("PLAYER_TALENT_UPDATE",function()
     talent.info()
 end)
 

@@ -1,6 +1,6 @@
 -- Required to access other files.
-local meta      = ...
-local spell     = require('conditions.spell')
+local meta = ...
+local spell = require('conditions.spell')
 local spellList = require('lists.spellList')
 -- for k, v in pairs(idList.buffs) do
 --     buff[k] = v
@@ -13,7 +13,7 @@ buff.__index = buff
 
 function buff.new(spellID)
     local self = setmetatable({}, buff)
-        self.Buff = spellID
+    self.Buff = spellID
     return self
 end
 
@@ -22,8 +22,8 @@ function buff.name(self)
 end
 
 -- Get Buff IDs for Spec
-for unitClass , classTable in pairs(spellList.idList) do
-    if unitClass == select(2,UnitClass('player')) or unitClass == 'Shared' then
+for unitClass, classTable in pairs(spellList.idList) do
+    if unitClass == select(2, UnitClass('player')) or unitClass == 'Shared' then
         for spec, specTable in pairs(classTable) do
             if spec == GetSpecializationInfo(GetSpecialization()) or spec == 'Shared' then
                 for spellType, spellTypeTable in pairs(specTable) do
@@ -36,7 +36,7 @@ for unitClass , classTable in pairs(spellList.idList) do
                 end
             end
         end
-    end        
+    end
 end
 
 -----------------------------------
@@ -44,15 +44,34 @@ end
 -----------------------------------
 
 -- Buff Info
-function buff.info(self,unit,filter)
+function buff.info(self, unit, filter)
+    local spellName = GetSpellInfo(self.Buff)
     local unit = unit or "player"
     local filter = filter or 'player'
-    return UnitBuff(unit,buff.name(self),filter)
+    local exactSearch = filter ~= nil and strfind(strupper(filter), "EXACT")
+    if exactSearch then
+        for i = 1, 40 do
+            local buffName, _, _, _, _, _, _, _, _, buffSpellID = meta._G.UnitBuff(unit, i, "player")
+            if buffName == nil then
+                return nil
+            end
+            if buffSpellID == self.Buff then
+                return meta._G.UnitBuff(unit, i)
+            end
+        end
+    else
+        if filter ~= nil and strfind(strupper(filter), "PLAYER") then
+            return meta._G.AuraUtil.FindAuraByName(buff.name(self), unit, "HELPFUL|PLAYER")
+        end
+        return meta._G.AuraUtil.FindAuraByName(spellName, unit, "HELPFUL")
+    end
+    -- return false
+    -- return meta._G.UnitBuff(unit,buff.name(self),filter)
 end
 
 -- Buff Exists
-function buff.exists(self,unit,filter)
-    return buff.info(self,unit,filter) ~= nil
+function buff.exists(self, unit, filter)
+    return buff.info(self, unit, filter) ~= nil
 end
 
 -- Buff Count - return Number of Buffs applied
@@ -61,30 +80,30 @@ function buff.count(unit, spellCheck)
 end
 
 -- Buff Duration - return Duration of Buff on Unit
-function buff.duration(self,unit,filter)
-    if buff.exists(self,unit,filter) then
-        return (select(6,buff.info(self,unit,filter)) * 1)
+function buff.duration(self, unit, filter)
+    if buff.exists(self, unit, filter) then
+        return (select(6, buff.info(self, unit, filter)) * 1)
     end
     return 0
 end
 
 -- Buff Remain - return Time Remaining on Buff on Unit, if not Buff the returns 0
-function buff.remain(self,unit,filter)
-    if buff.exists(self,unit,filter) then
-        return (select(7,buff.info(self,unit,filter)) - GetTime())
+function buff.remain(self, unit, filter)
+    if buff.exists(self, unit, filter) then
+        return (select(7, buff.info(self, unit, filter)) - GetTime())
     end
     return 0
 end
 
 -- Buff Refresh - return True/False if Buff on Unit can be refreshed (Pandemic Mechanic)
-function buff.refresh(self,unit,filter)
-    return buff.remain(self,unit,filter) < buff.duration(self,unit,filter) * 0.3
+function buff.refresh(self, unit, filter)
+    return buff.remain(self, unit, filter) < buff.duration(self, unit, filter) * 0.3
 end
 
 -- Buff Stack - return Stack count of Buff on Unit
-function buff.stack(self,unit,filter)
-    if buff.exists(self,unit,filter) then
-        return select(4,buff.info(self,unit,filter))
+function buff.stack(self, unit, filter)
+    if buff.exists(self, unit, filter) then
+        return select(4, buff.info(self, unit, filter))
     end
     return 0
 end

@@ -64,7 +64,7 @@ end
 
 -- Return Combat for Unit - True/False
 function base.combat(unitCheck)
-    return UnitAffectingCombat(unitCheck) ~= nil
+    return meta._G.UnitAffectingCombat(unitCheck) ~= nil
 end
 
 function base.inPvp()
@@ -73,17 +73,17 @@ end
 
 -- Starts the Auto Attack
 function base.startAttack(unitCheck)
-    local unit = unit or 'target'
+    local unit = unitCheck or 'target'
     if not IsCurrentSpell(6603) then
-        return StartAttack(unitCheck)
+        return meta._G.StartAttack(unit)
     end
 end
 
 -- Stops the Auto Attack
 function base.stopAttack(unitCheck)
-    local unit = unit or 'target'
+    local unit = unitCheck or 'target'
     if IsCurrentSpell(6603) then
-        return StopAttack(unitCheck)
+        return meta._G.StopAttack(unit)
     end
 end
 

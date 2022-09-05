@@ -1,8 +1,9 @@
 -- Required to access other files.
 local meta  = ...
+local update = meta.update
 local base 	= require('conditions.base')
 local unit 	= require('conditions.unit')
-local om = require('engines.om')
+local om = meta.om
 
 -- Init Friends
 friends = { }
@@ -16,9 +17,6 @@ function friends.engine()
 		-- check if it a unit first
 			-- sanity checks
         if unit.friend(thisUnit) then
-            local unitName 			= thisUnit.unitName
-            local unitID 			= thisUnit.UnitID
-            local unitGUID 			= thisUnit.unitGUID
             -- Check if Friend exists already and update info.
             local addFriend
             if addFriend == nil then addFriend = true end
@@ -31,11 +29,11 @@ function friends.engine()
                 end
             end
             -- If not then add friend
-            if addFriend then							
+            if addFriend then		
                 friends[thisUnit] 	= {
-                    name 			= unitName,
-                    guid 			= unitGUID,
-                    id 				= unitID,
+                    name 			= thisUnit.unitName,
+                    guid 			= thisUnit,
+                    id 				= thisUnit.UnitID,
                     unit            = thisUnit
                 }
             end
@@ -49,8 +47,8 @@ function friends.update()
 		for k, v in pairs(friends) do
 			if type(v) ~= 'function' then
 				local thisUnit 			= k
-				friends[k].name 		= UnitName(thisUnit)
-				friends[k].guid 		= UnitGUID(thisUnit)
+				friends[k].name 		= meta._G.UnitName(thisUnit)
+				friends[k].guid 		= meta._G.UnitGUID(thisUnit)
 				friends[k].id 			= unit.id(thisUnit)
 				friends[k].unit 		= thisUnit
 			end
@@ -63,7 +61,7 @@ function friends.cleanup()
 	for k, v in pairs(friends) do
 		if type(v) ~= 'function' then
 			-- here i want to scan the friends table and find any occurances of invalid units
-			if not unit.exists(friends[k].unit) or UnitIsDeadOrGhost(friends[k].unit) or not unit.visible(friends[k].unit) or unit.distance('player',friends[k].unit) > 40 then
+			if not unit.exists(friends[k].unit) or meta._G.UnitIsDeadOrGhost(friends[k].unit) or not unit.visible(friends[k].unit) or unit.distance('player',friends[k].unit) > 40 then
 				-- i will remove such units from table
 				friends[k] = nil
 			end
@@ -72,7 +70,7 @@ function friends.cleanup()
 end
 
 -- Build Friends
-AddFrameCallback(function ()
+update.register_callback(function ()
     -- Initialize Friends Engine
 	friends.engine()
 	friends.update()

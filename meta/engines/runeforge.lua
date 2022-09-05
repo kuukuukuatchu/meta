@@ -1,6 +1,7 @@
 local meta 		= ...
 local base 		= require('conditions.base')
 local powerList = require('lists.runeforge')
+local events    = meta.events
 
 -- Init Base
 local runeforge      = { }
@@ -28,7 +29,7 @@ end
 
 runeforge.update()
 
-AddEventCallback("PLAYER_EQUIPMENT_CHANGED", function()
+events.register_callback("PLAYER_EQUIPMENT_CHANGED", function()
     runeforge.update()
 end)
 

@@ -44,7 +44,7 @@ end
 function debuff.info(self,unit,filter)
     local unit = unit or "player"
     local filter = filter or 'player'
-    return UnitDebuff(unit,debuff.name(self),filter)
+    return meta._G.UnitDebuff(unit,debuff.name(self),filter)
 end
 
 -- Debuff Exists

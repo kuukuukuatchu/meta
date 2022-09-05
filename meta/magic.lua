@@ -5,6 +5,7 @@ local magic
 
 -- load in all the base calls, conditions, etc
 magic           = require('conditions.base')
+magic.events    = meta.events
 magic.buff      = require('conditions.buff')
 magic.cast      = require('conditions.cast')
 magic.combatlog = require('conditions.combatlog')
@@ -15,9 +16,11 @@ magic.power     = require('conditions.power')
 magic.spell     = require('conditions.spell')
 magic.talent 	= require('conditions.talent')
 magic.unit      = require('conditions.unit')
+magic.player    = require('conditions.player')
 magic.covenant  = require('engines.covenant')
 magic.conduit  = require('engines.conduit')
 magic.runeforge = require('engines.runeforge')
+magic.om        = require('engines.om')
 magic.enemies 	= require('engines.enemies')
 magic.friends 	= require('engines.friends')
 

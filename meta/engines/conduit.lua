@@ -1,5 +1,6 @@
 local meta 		= ...
 local base 		= require('conditions.base')
+local events    = meta.events
 
 -- Init Base
 local conduit      = { }
@@ -31,19 +32,19 @@ end
 
 conduit.update()
 
-AddEventCallback("SOULBIND_ACTIVATED", function()
+events.register_callback("SOULBIND_ACTIVATED", function()
     conduit.update()
 end)
-AddEventCallback("SOULBIND_CONDUIT_COLLECTION_REMOVED", function()
+events.register_callback("SOULBIND_CONDUIT_COLLECTION_REMOVED", function()
     conduit.update()
 end)
-AddEventCallback("SOULBIND_CONDUIT_COLLECTION_UPDATED", function()
+events.register_callback("SOULBIND_CONDUIT_COLLECTION_UPDATED", function()
     conduit.update()
 end)
-AddEventCallback("SOULBIND_CONDUIT_INSTALLED", function()
+events.register_callback("SOULBIND_CONDUIT_INSTALLED", function()
     conduit.update()
 end)
-AddEventCallback("SOULBIND_CONDUIT_UNINSTALLED", function()
+events.register_callback("SOULBIND_CONDUIT_UNINSTALLED", function()
     conduit.update()
 end)
 return conduit

@@ -1,5 +1,6 @@
 local meta 		= ...
 local base 		= require('conditions.base')
+local events    = meta.events
 
 -- Init Base
 local covenant      = { }
@@ -21,7 +22,7 @@ end
 
 covenant.update()
 
-AddEventCallback("COVENANT_CHOSEN", function()
+events.register_callback("COVENANT_CHOSEN", function()
     covenant.update()
 end)
 

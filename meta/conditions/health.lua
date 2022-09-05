@@ -1,5 +1,5 @@
 -- Required to access other files.
-local meta = ...
+
 
 -- Init Health
 local health = { }
@@ -10,27 +10,27 @@ local health = { }
 
 -- Return Unit Health Amount
 function health.amount(unit)
-    return UnitHealth(unit)
+    return meta._G.UnitHealth(unit)
 end
 
 -- Return Unit Health Max
 function health.max(unit)
-    return UnitHealthMax(unit)
+    return meta._G.UnitHealthMax(unit)
 end
 
 -- Return Unit Health Percent
 function health.percent(unit)
-    return (UnitHealth(unit) / UnitHealthMax(unit)) * 100
+    return (meta._G.UnitHealth(unit) / meta._G.UnitHealthMax(unit)) * 100
 end
 
 -- Return Unit Health Deficit (Amount)
 function health.deficitAmount(unit)
-    return UnitHealthMax(unit) - UnitHealth(unit)
+    return meta._G.UnitHealthMax(unit) - meta._G.UnitHealth(unit)
 end
 
 -- Return Unit Health Deficit (Percent)
 function health.deficitPercent(unit)
-    return (UnitHealthMax(unit) / UnitHealth(unit)) * 100
+    return (meta._G.UnitHealthMax(unit) / meta._G.UnitHealth(unit)) * 100
 end
 
 -- Return Functions

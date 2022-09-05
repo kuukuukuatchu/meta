@@ -27,12 +27,12 @@ function cast.spell(self,unitCast)
         local unitCast = unitCast or unit.getBest(self)
         -- print('|cffa330c9 [meta] |cffFFFF00 Casting: |r'..spell.name(self)..'|cffFFFF00 with Id: |r'..spell.id(self)..'|cffFFFF00 at: |r'..unitCast)
         -- print('Casting '..spell.name(v)..' with Id: '..v..' at: '..unitCast)
-        if not IsAoEPending() then
-            CastSpellByName(spell.name(self),unitCast)
+        if not meta._G.IsAoEPending() then
+            meta._G.CastSpellByName(spell.name(self),unitCast)
         end
-        if IsAoEPending() then
+        if meta._G.IsAoEPending() then
             local X,Y,Z = unit.position(unitCast)
-            ClickPosition(X,Y,Z)
+            meta.ClickPosition(X,Y,Z)
         end
         spell.last(self)
     end

@@ -463,28 +463,7 @@ spellList.idList = {
         },
     },
     DRUID = {
-        -- Balance
-        [102] = {
-            abilities                       = {
-
-            },
-            artifacts                       = {
-
-            },
-            buffs                           = {
-
-            },
-            debuffs                         = {
-
-            },
-            glyphs                          = {
-
-            },
-            talents                         = {
-
-            },
-        },
-        -- Feral
+       -- Feral
         [103] = {
             abilities                       = {
                 ashamanesFrenzy             = 210722,
@@ -574,6 +553,7 @@ spellList.idList = {
         -- Guardian
         [104] = {
             abilities                       = {
+                bearForm                    = 5487,
                 barkskin                    = 22812,
                 bristlingFur                = 155835,
                 frenziedRegeneration        = 22842,

@@ -129,7 +129,7 @@ function spell.castable(self)
 end
 
 function spell.casting(thisUnit)
-	if UnitCastingInfo(thisUnit) ~= nil or UnitChannelInfo(thisUnit) ~= nil then
+	if meta._G.UnitCastingInfo(thisUnit) ~= nil or meta._G.UnitChannelInfo(thisUnit) ~= nil then
 		return true
 	end
 	return false
@@ -137,13 +137,13 @@ end
 
 function spell.canInterrupt(thisUnit)
 	if spell.casting(thisUnit) then
-		if UnitCastingInfo(thisUnit) ~= nil and select(6,UnitCastingInfo(thisUnit)) and not select(9,UnitCastingInfo(thisUnit)) then --Get spell cast time
-			castStartTime = select(5,UnitCastingInfo(thisUnit))
-			castEndTime = select(6,UnitCastingInfo(thisUnit))
+		if meta._G.UnitCastingInfo(thisUnit) ~= nil and select(6,meta._G.UnitCastingInfo(thisUnit)) and not select(9,meta._G.UnitCastingInfo(thisUnit)) then --Get spell cast time
+			castStartTime = select(5,meta._G.UnitCastingInfo(thisUnit))
+			castEndTime = select(6,meta._G.UnitCastingInfo(thisUnit))
 			castType = "spellcast"
-		elseif UnitChannelInfo(thisUnit) ~= nil and select(6,UnitChannelInfo(thisUnit)) and not select(8,UnitChannelInfo(thisUnit)) then -- Get spell channel time
-			castStartTime = select(5,UnitChannelInfo(thisUnit))
-			castEndTime = select(6,UnitChannelInfo(thisUnit))
+		elseif meta._G.UnitChannelInfo(thisUnit) ~= nil and select(6,meta._G.UnitChannelInfo(thisUnit)) and not select(8,meta._G.UnitChannelInfo(thisUnit)) then -- Get spell channel time
+			castStartTime = select(5,meta._G.UnitChannelInfo(thisUnit))
+			castEndTime = select(6,meta._G.UnitChannelInfo(thisUnit))
 			castType = "spellchannel"
 		else
 			castStartTime = 0
