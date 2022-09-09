@@ -134,8 +134,8 @@ function unit.distance(unit1, unit2)
         -- Get the distance
         local X1, Y1, Z1 = unit.position(unit1)
         local X2, Y2, Z2 = unit.position(unit2)
-        local TargetCombatReach = meta._G.UnitCombatReach(unit1)
-        local PlayerCombatReach = meta._G.UnitCombatReach(unit2)
+        local TargetCombatReach = meta._G.UnitCombatReach(unit1) or 0
+        local PlayerCombatReach = meta._G.UnitCombatReach(unit2) or 0
         -- local MeleeCombatReachConstant = 4 / 3
         -- if unit.moving(unit1) and unit.moving(unit2) then
         --     IfSourceAndTargetAreRunning = 8 / 3

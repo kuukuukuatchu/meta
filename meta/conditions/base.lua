@@ -6,29 +6,6 @@ local spellList = require('lists.spellList')
 local base      = { }
 
 castable = {}
--- idList = spellList.mergeIdTables(idList)
--- for k, v in pairs(spellList.idList) do
---     base[k] = v
--- end
--- for unitClass , classTable in pairs(spellList.idList) do
---     if unitClass == select(2,UnitClass('player')) or unitClass == 'Shared' then
---         for spec, specTable in pairs(classTable) do
---             if spec == GetSpecializationInfo(GetSpecialization()) or spec == 'Shared' then
---                 for spellType, spellTypeTable in pairs(specTable) do
---                     if spellType == 'abilities' then
---                         for spell, spellID in pairs(spellTypeTable) do
---                             base[spell] = spellID
---                             castable[spell] = spellID
---                         end
---                     end
---                 end
---             end
---         end
---     end        
--- end
--- for k, v in pairs(idList) do
--- 	base[k] = spell.new(v) -- Objectify these spells
--- end
 
 for unitClass , classTable in pairs(spellList.idList) do
     if unitClass == select(2,UnitClass('player')) or unitClass == 'Shared' then
@@ -86,19 +63,5 @@ function base.stopAttack(unitCheck)
         return meta._G.StopAttack(unit)
     end
 end
-
--- function base.Power()
---     print("Ashley tests")
--- end
-
--- -- Return Cast
--- function base.castSpell(spellCast,unitCast)
---     unitCast = unitCast or unit.getBest(spellCast)
---     -- cast.best(spellID) -- not sure how to add this one
---     if unit.friend(unitCast) and unit.dead(unitCast) then
---     cast.dead(spellCast,unitCast)
---     cast.friend(spellCast,unitCast)
---     cast.enemy(spellCast,unitCast)
--- end
 
 return base

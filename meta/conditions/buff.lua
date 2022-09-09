@@ -2,9 +2,6 @@
 local meta = ...
 local spell = require('conditions.spell')
 local spellList = require('lists.spellList')
--- for k, v in pairs(idList.buffs) do
---     buff[k] = v
--- end
 
 -- Init Buff
 local buff = {}
@@ -45,28 +42,25 @@ end
 
 -- Buff Info
 function buff.info(self, unit, filter)
-    local spellName = GetSpellInfo(self.Buff)
     local unit = unit or "player"
     local filter = filter or 'player'
-    local exactSearch = filter ~= nil and strfind(strupper(filter), "EXACT")
+    local exactSearch = filter == "EXACT"
     if exactSearch then
         for i = 1, 40 do
-            local buffName, _, _, _, _, _, _, _, _, buffSpellID = meta._G.UnitBuff(unit, i, "player")
+            local buffName, icon, count, debuffType, duration, expire, source, isStealable, showPersonal, buffSpellID = meta._G.UnitBuff(unit, i, "player")
             if buffName == nil then
                 return nil
             end
             if buffSpellID == self.Buff then
-                return meta._G.UnitBuff(unit, i)
+                return buffName, icon, count, debuffType, duration, expire, source, isStealable, showPersonal , buffSpellID
             end
         end
     else
-        if filter ~= nil and strfind(strupper(filter), "PLAYER") then
+        if filter == "PLAYER" then
             return meta._G.AuraUtil.FindAuraByName(buff.name(self), unit, "HELPFUL|PLAYER")
         end
-        return meta._G.AuraUtil.FindAuraByName(spellName, unit, "HELPFUL")
+        return meta._G.AuraUtil.FindAuraByName(buff.name(self), unit, "HELPFUL")
     end
-    -- return false
-    -- return meta._G.UnitBuff(unit,buff.name(self),filter)
 end
 
 -- Buff Exists
@@ -76,23 +70,19 @@ end
 
 -- Buff Count - return Number of Buffs applied
 function buff.count(unit, spellCheck)
-    return 0
+    return select("#", UnitAuraSlots(unit, "HELPFUL"))
 end
 
 -- Buff Duration - return Duration of Buff on Unit
 function buff.duration(self, unit, filter)
-    if buff.exists(self, unit, filter) then
-        return (select(6, buff.info(self, unit, filter)) * 1)
-    end
-    return 0
+    local duration = select(5, buff.info(self, unit, filter))
+    return duration or 0
 end
 
 -- Buff Remain - return Time Remaining on Buff on Unit, if not Buff the returns 0
 function buff.remain(self, unit, filter)
-    if buff.exists(self, unit, filter) then
-        return (select(7, buff.info(self, unit, filter)) - GetTime())
-    end
-    return 0
+    local remain = (select(6, buff.info(self, unit, filter)) - GetTime())
+    return remain or 0
 end
 
 -- Buff Refresh - return True/False if Buff on Unit can be refreshed (Pandemic Mechanic)
@@ -102,10 +92,8 @@ end
 
 -- Buff Stack - return Stack count of Buff on Unit
 function buff.stack(self, unit, filter)
-    if buff.exists(self, unit, filter) then
-        return select(4, buff.info(self, unit, filter))
-    end
-    return 0
+    local stack = select(3, buff.info(self, unit, filter))
+    return stack or 0
 end
 
 -- Return Functions

@@ -47,7 +47,6 @@ end
 Initializes the event handler to be used.
 ]]
 -- function events.initialize()
-    print("Initializing")
     meta.frame:SetScript("OnEvent", event_handler)
 -- end
 

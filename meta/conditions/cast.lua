@@ -22,48 +22,29 @@ end
 --- Cast Related Functions Here ---
 -----------------------------------
 
-function cast.spell(self,unitCast)
+function cast.spell(self, unitCast)
     if self ~= nil then
-        local unitCast = unitCast or unit.getBest(self)
+        local unitCast = unitCast
         -- print('|cffa330c9 [meta] |cffFFFF00 Casting: |r'..spell.name(self)..'|cffFFFF00 with Id: |r'..spell.id(self)..'|cffFFFF00 at: |r'..unitCast)
         -- print('Casting '..spell.name(v)..' with Id: '..v..' at: '..unitCast)
-        if not meta._G.IsAoEPending() then
-            meta._G.CastSpellByName(spell.name(self),unitCast)
-        end
-        if meta._G.IsAoEPending() then
-            local X,Y,Z = unit.position(unitCast)
-            meta.ClickPosition(X,Y,Z)
-        end
+        meta._G.CastSpellByName(spell.name(self),unitCast)
         spell.last(self)
     end
 end
 
--- for k, v in pairs(castable) do
---     cast[k] = function(unitCast)
---         unitCast = unitCast or unit.getBest(k)
---         print('|cffa330c9 [meta] |cffFFFF00 Casting: |r'..spell.name(k)..'|cffFFFF00 with Id: |r'..v..'|cffFFFF00 at: |r'..unitCast)
---         -- print('Casting '..spell.name(v)..' with Id: '..v..' at: '..unitCast)
---         if not IsAoEPending() then
---             CastSpellByName(spell.name(k),unitCast)
---         end
---         if IsAoEPending() then
---             local X,Y,Z = unit.position(unitCast)
---             ClickPosition(X,Y,Z)
---         end
---         -- spell.last(v)
---     end
--- end
--- end
+function cast.ground(self, x, y, z)
+    if self ~= nil then
+        cast.spell(self)
+        meta._G.ClickPosition(x,y,z)
+    end
+end
 
--- function cast.spell(spellCast,unitCast)
---     CastSpellByName(spellCast,unitCast)
---     if IsAoEPending() then
---         local X,Y,Z = unit.position(unitCast)
---         ClickPosition(X,Y,Z)
---     end
---     -- spell.last = spellCast
---     -- unit.last = unitCast
--- end
+function cast.on(self, unitCast)
+    if self ~= nil then
+        local x, y, z = unit.position(unitCast)
+        cast.ground(self, x,y,z)
+    end
+end
 
 -- function cast.dead(spellCast,unitCast)
 --     if unit.friend(unitCast) and unit.dead(unitCast) then

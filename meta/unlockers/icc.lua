@@ -313,6 +313,7 @@ local function ICC()
 			return m.UnitGUID(...)
 		end
 	end
+	m.ObjectType = icc.ObjectType
 	m.ObjectIsUnit = function(...)
 		local ObjType = icc.ObjectType(...)
 		return ObjType == 5
