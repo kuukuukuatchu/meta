@@ -213,9 +213,8 @@ local unlockList =
 	"UseToy",
 	"UseToyByName"
 }
-print("Is this loading")
 --------------------------------------------------------------------------------------------------------------------------------
--- functions exported to BadRotations
+-- functions exported to Meta
 --------------------------------------------------------------------------------------------------------------------------------
 local meta = ...
 meta.unlock = {}
@@ -235,12 +234,6 @@ local function stringsplit(inputstr, sep)
 	end
 	return t
 end
-
--- obtain references to WA APIs from the BadRotations plugin
--- if _G.BR_ICC then
--- 	icc = _G.BR_ICC
--- 	_G.BR_ICC = nil
-
 	-- make a backup copy of all APIs before AddOns hook them
 	for i = 1, #unlockList do
 		local func = unlockList[i]
@@ -250,7 +243,6 @@ end
 	-- either not WA or BR addon is not enabled
 -- end
 
-print("Loaded")
 local function ICC()
 	if not icc then
 		return false

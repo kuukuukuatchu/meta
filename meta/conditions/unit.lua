@@ -279,7 +279,7 @@ function unit.valid(unitCheck)
             (unit.distance(unitCheck) <= 20 or unit.isUnit(unitCheck, 'target')) then
             return true
         end
-        if not base.combat("player") and not IsInInstance() and
+        if not base.combat("player") and IsInInstance() and
             (unit.hasThreat(unitCheck) or (unit.groupCount() == 1 and unit.isUnit(unitCheck, 'target'))) then
             return true
         end
@@ -337,6 +337,26 @@ end
 -- Return Combat for Unit - True/False
 function unit.combat(thisUnit)
     return meta._G.UnitAffectingCombat(thisUnit) ~= nil
+end
+
+function unit.level(thisUnit)
+    return meta._G.UnitLevel(thisUnit)
+end
+
+function unit.form()
+    return GetShapeshiftForm()
+end
+
+function unit.mounted()
+    return IsMounted()
+end
+
+function unit.flying()
+    return IsFlying()
+end
+
+function unit.canFly()
+	return IsOutdoors() and IsFlyableArea()
 end
 
 -- Return Functions
