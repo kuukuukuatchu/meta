@@ -75,6 +75,11 @@ end)
 button:SetScript("OnClick", function(self, button)
     if button == "LeftButton" then
         print("Left Button Clicked")
+        if meta.windows.config:IsShown() then
+            meta.windows.config:Hide()
+        else
+            meta.windows.config:Show()
+        end
     end
 end)
 button:SetScript("OnEnter", function(self)

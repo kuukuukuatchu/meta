@@ -11,7 +11,7 @@ C_Timer.After(1, function()
             local filepath = string.gsub(fileResolver, "[.]", "\\")
             local lua = icc.GetContents(string.gsub(baseFolder .. 'meta\\' .. filepath .. '.lua', "\\+", "/"))
             if not lua then
-                print('|cffa330c9[meta] |r Load LUA files failed. ')
+                print('|cffa330c9[meta] |r Load LUA files failed. '.. filepath)
                 return nil
             end
             if not packages[fileResolver] then
