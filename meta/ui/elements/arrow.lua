@@ -14,15 +14,12 @@ function meta.ui:createRightArrow(window)
         alpha = .7,
         image = {"DiesalGUIcons", {7, 5, 16, 256, 128}}
     })
-    rArr.settings.width = 20
-    rArr.settings.height = 20
-    rArr.settings.disabled = false
     rArr:SetPoint("TOPRIGHT", 0, 0)
-    -- rArr:SetSettings({
-    --     width           = 20,
-    --     height          = 20,
-    --     disabled        = false,
-    -- },true)
+    rArr:SetSettings({
+        width           = 20,
+        height          = 20,
+        disabled        = false,
+    },true)
     rArr:SetEventListener(
         "OnEnter",
         function()
@@ -38,7 +35,6 @@ function meta.ui:createRightArrow(window)
         end
     )
     rArr:ApplySettings()
-    -- window:AddChild(rArr)
     return rArr
 end
 -- Left Arrow
@@ -76,6 +72,5 @@ function meta.ui:createLeftArrow(window)
            GameTooltip:Hide()
         end
     )
-    -- window:AddChild(lArr)
     return lArr
 end

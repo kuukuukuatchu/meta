@@ -2,7 +2,7 @@ local DiesalGUI = _G.LibStub("DiesalGUI-1.0")
 local DiesalTools = _G.LibStub("DiesalTools-1.0")
 local meta = ...
 meta.ui = meta.ui or {}
-function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, tooltipSpin, hideCheckbox)
+function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, tooltipSpin, hideCheckbox, base)
     -------------------------------
     ----Need to calculate Y Pos----
     -------------------------------
@@ -17,7 +17,7 @@ function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, to
     -------------------------------
     --------Create CheckBox--------
     -------------------------------
-    local checkBox = meta.ui:createCheckbox(parent, text, tooltip)
+    local checkBox = meta.ui:createCheckbox(parent, text, tooltip, false, base)
     if hideCheckbox then
         local check = true
         -- local check = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"]
@@ -58,18 +58,27 @@ function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, to
     ---BR Stuff---
     --------------
     -- Read number from config or set default
-    -- if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"] == nil then
-    --     br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"] = number
-    -- end
+    local state
+    local location
+    if not base then
+        state = meta.data.settings[meta.currentProfile]
+        location = meta.folder.."/Settings/"..GetRealmName().."/"..UnitName("player").."/"..meta.specName.."/settings.json"
+    else
+        state = meta.data.settings.base
+        location = meta.folder.."/Settings/baseUI/settings.json"
+    end
+    if state[text .. "Status"] == nil then
+        state[text .. "Status"] = number
+    end
 
     -- -- Add to UI Settings **Do not comment out or remove, will result in loss of settings**
     -- if br.data.ui == nil then
     --     br.data.ui = {}
     -- end
-    -- br.data.ui[text .. "Status"] = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"]
+    -- br.data.ui[text .. "Status"] = state[text .. "Status"]
 
-    -- local state = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"]
-    spinner:SetNumber(0)
+    local value = state[text .. "Status"]
+    spinner:SetNumber(value)
 
     ------------------
     ------Events------
@@ -78,7 +87,8 @@ function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, to
     spinner:SetEventListener(
         "OnValueChanged",
         function()
-            -- br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"] = spinner:GetNumber()
+            state[text .. "Status"] = spinner:GetNumber()
+            meta.json.save(state, location)
         end
     )
     -- Event: Tooltip
@@ -87,8 +97,8 @@ function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, to
         spinner:SetEventListener(
             "OnEnter",
             function()
-                -- GameTooltip:SetOwner(spinner.frame, "ANCHOR_TOPLEFT", 0 , 2)
-                -- GameTooltip:AddLine(tooltip)
+                GameTooltip:SetOwner(spinner.frame, "ANCHOR_TOPLEFT", 0 , 2)
+                GameTooltip:AddLine(tooltip)
                 GameTooltip:SetOwner(Minimap, "ANCHOR_CURSOR", 50, 50)
                 GameTooltip:SetText(tooltip, 214 / 255, 25 / 255, 25 / 255)
                 GameTooltip:Show()
@@ -112,7 +122,7 @@ function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, to
 end
 
 -- Spinner Object : {number, min, max, step, tooltip}
-function meta.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbox)
+function meta.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbox,base)
     -------------------------------
     ----Need to calculate Y Pos----
     -------------------------------
@@ -127,13 +137,9 @@ function meta.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheck
     -------------------------------
     --------Create CheckBox--------
     -------------------------------
-    local checkBox = meta.ui:createCheckbox(parent, text, "Enable auto usage of this spell")
+    local checkBox = meta.ui:createCheckbox(parent, text, "Enable auto usage of this spell", false, base)
     if hideCheckbox then
-        -- local check = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"]
-        local check = true
-        if check == true then
-            checkBox:SetChecked(false)
-        end
+        checkBox:SetChecked(false)
         checkBox:Disable()
         checkBox:ReleaseTextures()
     end
@@ -184,25 +190,27 @@ function meta.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheck
     --------------
     ---BR Stuff---
     --------------
+    local state
+    local location
+    if not base then
+        state = meta.data.settings[meta.currentProfile]
+        location = meta.folder.."/Settings/"..GetRealmName().."/"..UnitName("player").."/"..meta.specName.."/settings.json"
+    else
+        state = meta.data.settings.base
+        location = meta.folder.."/Settings/baseUI/settings.json"
+    end
     -- Read number from config or set default
-    -- if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "1Status"] == nil then
-    --     br.data.settings[br.selectedSpec][br.selectedProfile][text .. "1Status"] = spinner1.number
-    -- end
-    -- if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "2Status"] == nil then
-    --     br.data.settings[br.selectedSpec][br.selectedProfile][text .. "2Status"] = spinner2.number
-    -- end
+    if state[text .. "1Status"] == nil then
+        state[text .. "1Status"] = spinner1.number
+    end
+    if state[text .. "2Status"] == nil then
+        state[text .. "2Status"] = spinner2.number
+    end
 
-    -- -- Add to UI Settings **Do not comment out or remove, will result in loss of settings**
-    -- if br.data.ui == nil then
-    --     br.data.ui = {}
-    -- end
-    -- br.data.ui[text .. "1Status"] = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "1Status"]
-    -- br.data.ui[text .. "2Status"] = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "2Status"]
-
-    -- local state1 = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "1Status"]
-    spinnerElement1:SetNumber(0)
-    -- local state2 = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "2Status"]
-    spinnerElement2:SetNumber(0)
+    local state1 = state[text .. "1Status"]
+    spinnerElement1:SetNumber(state1)
+    local state2 = state[text .. "2Status"]
+    spinnerElement2:SetNumber(state2)
 
     ------------------
     ------Events------
@@ -211,13 +219,15 @@ function meta.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheck
     spinnerElement1:SetEventListener(
         "OnValueChanged",
         function()
-            -- br.data.settings[br.selectedSpec][br.selectedProfile][text .. "1Status"] = spinnerElement1:GetNumber()
+            state[text .. "1Status"] = spinnerElement1:GetNumber()
+            meta.json.save(state, location)
         end
     )
     spinnerElement2:SetEventListener(
         "OnValueChanged",
         function()
-            -- br.data.settings[br.selectedSpec][br.selectedProfile][text .. "2Status"] = spinnerElement2:GetNumber()
+            state[text .. "2Status"] = spinnerElement2:GetNumber()
+            meta.json.save(state, location)
         end
     )
     -- Event: Tooltip
@@ -264,6 +274,6 @@ function meta.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheck
     return spinner1, spinner2
 end
 
-function meta.ui:createSpinnerWithout(parent, text, number, min, max, step, tooltip, tooltipSpin)
-    return meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, tooltipSpin, true)
+function meta.ui:createSpinnerWithout(parent, text, number, min, max, step, tooltip, tooltipSpin, base)
+    return meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, tooltipSpin, true, base)
 end

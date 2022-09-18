@@ -1,35 +1,14 @@
 local meta, require = ...
 local loader = {}
 local rotations = {}
-local events    = meta.events
+local events = meta.events
 local update = meta.update
-
-local GetDirectoryFiles = function(...)
-    local extension = string.match(..., "^.+(%..+)$")
-    local directory = string.gsub(..., "\\+", "/"):gsub("/+*.lua", "")
-    local count = 1
-    local profiles = {}
-    local files = icc.GetContents(directory)
-    if files and #files then
-        for _, file in ipairs(files) do
-            if file.dir == false then
-                local path = file.path:gsub("\\+", "/")
-                if path:match(extension) then
-                    profiles[count] = path:match("^.+/(.+)$")
-                    count = count + 1
-                end
-            end
-        end
-    end
-    return profiles
-
-end
 
 local GetDirectories = function(...)
     local directory = string.gsub(..., "\\+", "/"):gsub("/+*.lua", "")
     local count = 1
     local directories = {}
-    local files = icc.GetContents(directory)
+    local files = meta._G.ReadFile(directory)
     if files and #files then
         for _, file in ipairs(files) do
             directories[count] = file.path:match("^.+/(.+)$")
@@ -56,7 +35,7 @@ function SlashCmdList.META(msg, editBox)
 end
 
 function loader.rotationsDirectory()
-    return icc.GetBaseFolder() .. '\\Interface\\AddOns\\meta\\meta\\rotations\\'
+    return meta._G.GetWoWDirectory() .. '\\Interface\\AddOns\\meta\\meta\\rotations\\'
 end
 
 function loader.classDirectories()
@@ -68,7 +47,7 @@ function loader.specDirectories(class)
 end
 
 function loader.profiles(class, spec)
-    return GetDirectoryFiles(loader.rotationsDirectory() .. class .. '\\' .. spec .. '\\*.lua')
+    return meta._G.GetDirectoryFiles(loader.rotationsDirectory() .. class .. '\\' .. spec .. '\\*.lua')
 end
 
 function loader.loadProfiles()
@@ -95,6 +74,7 @@ function loader.loadProfiles()
                             if metaToggle == 1 then
                                 print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled")
                             end
+                            meta.currentProfile = rotation.profileName
                             meta.magic(rotation.rotation)
                             rotations[rotation.profileName] = rotation
                         end
@@ -139,8 +119,8 @@ end
 update.register_callback(function()
     -- Initialize Rotation
     -- if loader.timer('runRotation',math.random(0.15, 0.3)) then
-    if metaToggle == 1 then
-        for k, v in pairs(rotations) do
+    for k, v in pairs(rotations) do
+        if metaToggle == 1 then
             rotations[k].rotation()
         end
     end

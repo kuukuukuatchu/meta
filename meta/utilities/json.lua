@@ -21,8 +21,9 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --
-
-local json = { _version = "0.1.2" }
+local meta = ...
+meta.json = { _version = "0.1.2" }
+local json = meta.json
 
 -------------------------------------------------------------------------------
 -- Encode
@@ -382,6 +383,29 @@ function json.decode(str)
     decode_error(str, idx, "trailing garbage")
   end
   return res
+end
+
+function json.save(tbl, path)
+  local contents = json.encode(tbl)
+  
+  if not path then
+    print("No path found!")
+  else
+    meta._G.WriteFile(path, contents)
+  end
+end
+
+function json.load(path)
+  if not meta._G.DirectoryExists(path) then
+    print("Nothing found!")
+    return {}
+  end
+  local contents = meta._G.ReadFile(path)
+  if not contents then
+    print("Contents not found!")
+    return {}
+  end
+  return json.decode(contents)
 end
 
 

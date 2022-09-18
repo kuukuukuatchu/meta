@@ -4,12 +4,19 @@ meta.class = select(2, UnitClass("player"))
 meta.classColor = select(4, GetClassColor(meta.class))
 meta.frame = CreateFrame("frame") -- create frame we can set all our scripts on
 meta.data = {}
+meta.data.settings = {}
+meta.data.settings.base = {}
 meta.windows = {}
 meta.debug = {}
+meta.currentProfile = "None"
+meta.folder = meta._G.GetWoWDirectory().."/Interface/AddOns/meta"
+meta.specID, meta.specName = GetSpecializationInfo(GetSpecialization())
 meta.om = {} -- create om that is available throughout addon
 require('handlers.update') -- load update handler
 meta.events = require('handlers.events') -- load events handlers
 meta.magic = require('magic') -- setup environment and functions needed in profiles
+require('utilities.fs')
+require('utilities.json')
 meta.loader = require('loader') -- load profiles and start rotation engine
 require('ui.elements.arrow')
 require('ui.elements.window')

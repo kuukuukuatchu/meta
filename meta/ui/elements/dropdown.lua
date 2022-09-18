@@ -3,7 +3,7 @@ local DiesalTools = LibStub("DiesalTools-1.0")
 local meta = ...
 meta.ui = meta.ui or {}
 
-function meta.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipDrop, hideCheckbox)
+function meta.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipDrop, hideCheckbox, base)
     -------------------------------
     ----Need to calculate Y Pos----
     -------------------------------
@@ -18,7 +18,7 @@ function meta.ui:createDropdown(parent, text, itemlist, default, tooltip, toolti
     -------------------------------
     --------Create CheckBox--------
     -------------------------------
-    local checkBox = meta.ui:createCheckbox(parent, text, tooltip)
+    local checkBox = meta.ui:createCheckbox(parent, text, tooltip, false, true)
     if hideCheckbox then
         local check = true
         if check == true then
@@ -44,19 +44,22 @@ function meta.ui:createDropdown(parent, text, itemlist, default, tooltip, toolti
     --------------
     ---BR Stuff---
     --------------
+    local state
+    local location
+    if not base then
+        state = meta.data.settings[meta.currentProfile]
+        location = meta.folder.."/Settings/"..GetRealmName().."/"..UnitName("player").."/"..meta.specName.."/settings.json"
+    else
+        state = meta.data.settings.base
+        location = meta.folder.."/Settings/baseUI/settings.json"
+    end
     -- Read from config or set default
-    -- if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"] == nil then
-    --     br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"] = default
-    -- end
+    if state[text .. "Drop"] == nil then
+        state[text .. "Drop"] = default
+    end
 
-    -- -- Add to UI Settings **Do not comment out or remove, will result in loss of settings**
-    -- if br.data.ui == nil then
-    --     br.data.ui = {}
-    -- end
-    -- br.data.ui[text .. "Drop"] = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"]
-
-    -- local value = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"]
-    newDropdown:SetValue(default)
+    local value = state[text .. "Drop"]
+    newDropdown:SetValue(value)
 
     ------------------
     ------Events------
@@ -83,7 +86,8 @@ function meta.ui:createDropdown(parent, text, itemlist, default, tooltip, toolti
     newDropdown:SetEventListener(
         "OnValueChanged",
         function(this, event, key, value, selection)
-            -- br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"] = key
+            state[text .. "Drop"] = key
+            meta.json.save(state, location)
         end
     )
     -- Event: Tooltip
@@ -116,8 +120,8 @@ function meta.ui:createDropdown(parent, text, itemlist, default, tooltip, toolti
     return newDropdown, checkBox
 end
 
-function meta.ui:createDropdownWithout(parent, text, itemlist, default, tooltip, tooltipDrop)
-    return meta.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipDrop, true)
+function meta.ui:createDropdownWithout(parent, text, itemlist, default, tooltip, tooltipDrop, base)
+    return meta.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipDrop, true, base)
 end
 
 -- function br.ui:createProfileDropdown(parent)

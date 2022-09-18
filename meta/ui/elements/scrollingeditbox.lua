@@ -4,7 +4,7 @@ local DiesalStyle = LibStub("DiesalStyle-1.0")
 local Colors = DiesalStyle.Colors
 local meta = ...
 meta.ui = meta.ui or {}
-function meta.ui:createScrollingEditBox(parent, text, content, tooltip, width, height, hideCheckbox)
+function meta.ui:createScrollingEditBox(parent, text, content, tooltip, width, height, hideCheckbox, base)
     if width == nil then
         width = 240
     end
@@ -25,13 +25,9 @@ function meta.ui:createScrollingEditBox(parent, text, content, tooltip, width, h
     -------------------------------
     --------Create CheckBox--------
     -------------------------------
-    local checkBox = meta.ui:createCheckbox(parent, text, tooltip)
+    local checkBox = meta.ui:createCheckbox(parent, text, tooltip, false, base)
     if hideCheckbox then
-        -- local check = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"]
-        local check = true
-        if check == true then
-            checkBox:SetChecked(false)
-        end
+        checkBox:SetChecked(false)
         checkBox:Disable()
         checkBox:ReleaseTextures()
     end
@@ -84,11 +80,20 @@ function meta.ui:createScrollingEditBox(parent, text, content, tooltip, width, h
     ---BR Stuff---
     --------------
     -- Read number from config or set default
-    -- if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "EditBox"] == nil then
-    --     br.data.settings[br.selectedSpec][br.selectedProfile][text .. "EditBox"] = content
-    -- end
-    -- local state = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "EditBox"]
-    input:SetText(content)
+    local state
+    local location
+    if not base then
+        state = meta.data.settings[meta.currentProfile]
+        location = meta.folder.."/Settings/"..GetRealmName().."/"..UnitName("player").."/"..meta.specName.."/settings.json"
+    else
+        state = meta.data.settings.base
+        location = meta.folder.."/Settings/baseUI/settings.json"
+    end
+    if state[text .. "EditBox"] == nil then
+        state[text .. "EditBox"] = content
+    end
+    local value = state[text .. "EditBox"]
+    input:SetText(value)
     input:SetWidth(width)
     input:SetHeight(height)
 
@@ -99,8 +104,9 @@ function meta.ui:createScrollingEditBox(parent, text, content, tooltip, width, h
     input:SetEventListener(
         "OnTextChanged",
         function()
-            -- br.data.settings[br.selectedSpec][br.selectedProfile][text .. "EditBox"] = input.editBox:GetText()
+            state[text .. "EditBox"] = input.editBox:GetText()
             input.settings.text = input.editBox:GetText()
+            meta.json.save(state, location)
         end
     )
     ----------------------
@@ -113,6 +119,6 @@ function meta.ui:createScrollingEditBox(parent, text, content, tooltip, width, h
     return input, checkBox
 end
 
-function meta.ui:createScrollingEditBoxWithout(parent, text, content, tooltip, width, height)
+function meta.ui:createScrollingEditBoxWithout(parent, text, content, tooltip, width, height, base)
     return meta.ui:createScrollingEditBox(parent, text, content, tooltip, width, height, true)
 end
