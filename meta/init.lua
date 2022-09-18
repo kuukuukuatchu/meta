@@ -29,5 +29,6 @@ require('ui.elements.spinner')
 require('ui.elements.button')
 require('ui.minimap')
 require('ui.windows.config')
+require('ui.windows.profile')
 
 -- _meta = meta

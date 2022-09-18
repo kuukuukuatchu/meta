@@ -24,16 +24,19 @@ function meta.checkDirectories(type)
                 meta._G.print("Creating Base Settings Directory " .. baseDir .. " failed!")
             end
         else
-            local realmDir = mainDir .. GetRealmName() .. "/"
-            if checkIfExists(realmDir) then
-                local unitDir = realmDir .. UnitName("player") .. "/"
-                if checkIfExists(unitDir) then
-                    local specDir = unitDir .. meta.specName .. "/"
-                    if checkIfExists(specDir) then
-                        local typeDir = specDir .. type .. "/"
-                        if checkIfExists(typeDir) then
-                            return true
+            local unitDir = mainDir .. select(2, UnitClass("player")) .. "/"
+            if checkIfExists(unitDir) then
+                local specDir = unitDir .. meta.specName .. "/"
+                if checkIfExists(specDir) then
+                    local profileDir = specDir .. meta.currentProfile .. "/"
+                    if checkIfExists(profileDir) then
+                        if type then
+                            local typeDir = profileDir .. type .. "/"
+                            if checkIfExists(typeDir) then
+                                return true
+                            end
                         end
+                        return true
                     end
                 end
             end

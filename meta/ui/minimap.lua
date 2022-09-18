@@ -61,6 +61,11 @@ button:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-Background.blp")
 button:SetScript("OnMouseDown", function(self, button)
     if button == "RightButton" then
         print("Right Button Down")
+        if meta.windows.profile:IsShown() then
+            meta.windows.profile:Hide()
+        else
+            meta.windows.profile:Show()
+        end
     end
     if button == "MiddleButton" then
         print("Middle Button Down")
