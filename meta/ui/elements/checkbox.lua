@@ -59,7 +59,7 @@ function meta.ui:createCheckbox(parent, text, tooltip, checked, base)
     local location
     if not base then
         state = meta.data.settings[meta.currentProfile]
-        location = meta.folder.."/Settings/"..GetRealmName().."/"..UnitName("player").."/"..meta.specName.."/settings.json"
+        location = meta.folder.."/Settings/"..meta.class.."/"..meta.specName.."/"..meta.currentProfile.."/settings.json"
     else
         state = meta.data.settings.base
         location = meta.folder.."/Settings/baseUI/settings.json"

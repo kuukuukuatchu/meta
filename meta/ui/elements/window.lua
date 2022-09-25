@@ -63,7 +63,6 @@ function meta.ui:createWindow(name, width, height, title, color, messageWindow)
     window.rotations:SetPoint("BOTTOMRIGHT", window.closeButton, "BOTTOMLEFT", 0, -0.5)
     window.titletext:SetPoint("TOPRIGHT", window.rotations.frame, "TOPLEFT")
     window.rotations:SetHeight(window.titleBar:GetHeight())
-    window.rotations:EnableMouse(false)
 
     window.dropdown = DiesalGUI:Create("Dropdown")
     window.dropdown:SetParent(window.header)
@@ -125,6 +124,7 @@ function meta.ui:createWindow(name, width, height, title, color, messageWindow)
     window.dropdown.AddListItem = AddListItem
     window.dropdown.RemoveListItem = RemoveListItem
     window.rotations.AddListItem = AddListItem
+    window.rotations.RemoveListItem = RemoveListItem
 
     window.createPage = function(name)
         local scrollFrame

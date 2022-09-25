@@ -211,8 +211,8 @@ local function rotation()
 end
 
 local GuardianKuu = {
-    profileID = 104,
-    profileName = "GuardianKuu",
+    profileID = 105,
+    profileName = "RestoKuu",
     rotation = rotation,
     onLoad = onLoad,
     onSelect = onSelect

@@ -53,6 +53,11 @@ end
 function loader.loadProfiles()
     local specID = GetSpecializationInfo(GetSpecialization())
     local rotationFound = false
+    for k, v in pairs(meta.windows.profile.rotations.children) do
+        if v then
+            meta.windows.profile.rotations:RemoveListItem(v.settings.value)
+        end
+    end
     wipe(rotations)
     -- Search each Class Folder in the Rotations Folder
     for _, class in pairs(loader.classDirectories()) do
@@ -75,13 +80,23 @@ function loader.loadProfiles()
                                 print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled")
                             end
                             meta.currentProfile = rotation.profileName
+                            meta.data.settings[meta.currentProfile] = {}
+                            meta.windows.profile.rotations:AddListItem(rotation.profileName)
                             meta.magic(rotation.rotation)
                             rotations[rotation.profileName] = rotation
+                            -- rotations[rotation.profileName].onSelect()
                         end
                     end
                 end
             end
         end
+    end
+    meta.windows.profile.rotations:SetValue(1)
+    local selectedRotationName
+    if meta.windows.profile.rotations.children[1] then
+        selectedRotationName = meta.windows.profile.rotations.children[1].settings.value
+        print(selectedRotationName)
+        rotations[selectedRotationName].onSelect()
     end
     if not rotationFound then
         print('|cffa330c9[meta] |r No Rotation Found For Spec: |cFFFF0000' .. specID)
@@ -96,6 +111,7 @@ events.register_callback("ACTIVE_TALENT_GROUP_CHANGED", function()
 end)
 
 events.register_callback("PLAYER_ENTERING_WORLD", function()
+    print("Enter")
     loader.loadProfiles()
 end)
 
@@ -119,8 +135,8 @@ end
 update.register_callback(function()
     -- Initialize Rotation
     -- if loader.timer('runRotation',math.random(0.15, 0.3)) then
-    for k, v in pairs(rotations) do
-        if metaToggle == 1 then
+    if metaToggle == 1 then
+        for k, v in pairs(rotations) do
             rotations[k].rotation()
         end
     end

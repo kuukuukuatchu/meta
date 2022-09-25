@@ -2,8 +2,6 @@ local meta = ...
 
 local window = meta.ui:createWindow("profile", 275, 400, meta.class)
 meta.windows.profile = window
-window.rotations:ReleaseTextures()
-meta.checkDirectories()
 
 for _, page in ipairs(window.children) do
     if page.index == window.current_page then
@@ -13,5 +11,5 @@ for _, page in ipairs(window.children) do
     end
 end
 
-window:Show()
+window:Hide()
 window.initializing = false

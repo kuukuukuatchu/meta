@@ -24,7 +24,7 @@ function meta.checkDirectories(type)
                 meta._G.print("Creating Base Settings Directory " .. baseDir .. " failed!")
             end
         else
-            local unitDir = mainDir .. select(2, UnitClass("player")) .. "/"
+            local unitDir = mainDir .. meta.class .. "/"
             if checkIfExists(unitDir) then
                 local specDir = unitDir .. meta.specName .. "/"
                 if checkIfExists(specDir) then

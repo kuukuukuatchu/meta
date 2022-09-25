@@ -9,8 +9,8 @@ local function onSelect()
     ----------------------
     --- General Options---
     ----------------------
-    page = window.createPage("Settings")
-    section = meta.ui:createSection(page, "General - Version 1.04")
+    page = window.createPage("Settings2")
+    section = meta.ui:createSection(page, "General - Version 1.042")
     meta.ui:createDropdownWithout(section, "Cat Key", meta.dropOptions.Toggle, 6, "Set a key for cat")
     meta.ui:createDropdownWithout(section, "Travel Key", meta.dropOptions.Toggle, 6, "Set a key for travel")
     meta.ui:createDropdown(section, "Big Hit Oh Shit!", meta.dropOptions.Toggle, 6,
@@ -212,7 +212,7 @@ end
 
 local GuardianKuu = {
     profileID = 104,
-    profileName = "GuardianKuu",
+    profileName = "GuardianKuu2",
     rotation = rotation,
     onLoad = onLoad,
     onSelect = onSelect
