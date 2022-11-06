@@ -1,11 +1,11 @@
-local addonName, meta = ...
+local addonName, meta, icc = ...
 
 C_Timer.After(1, function()
     local unlocker = icc and "ICC" or nil
     if icc then
         -- if GetFireHackVersion () then
         print('|cffa330c9[meta] |r ' .. unlocker .. ' Detected, Loading...')
-        local baseFolder = icc.GetBaseFolder() .. '\\Interface\\AddOns\\meta\\'
+        local baseFolder = icc.GetBaseFolder(true) .. '\\AddOns\\meta\\'
         local packages = {}
         function require(fileResolver, ...)
             local filepath = string.gsub(fileResolver, "[.]", "\\")
@@ -27,7 +27,7 @@ C_Timer.After(1, function()
             return unpack(packages[fileResolver])
         end
         print('|cffa330c9[meta] |r Load Complete.')
-        local unlocked = require('unlockers.icc')
+        local unlocked = require('unlockers.icc', icc)
         if unlocked then
             require('init')
         else 

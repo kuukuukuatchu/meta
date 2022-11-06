@@ -1,7 +1,7 @@
 local meta = ...
+local window = meta.windows.profile
 
 local function onSelect()
-    local window = meta.windows.profile
     meta.checkDirectories()
 
     local section
@@ -9,8 +9,8 @@ local function onSelect()
     ----------------------
     --- General Options---
     ----------------------
-    page = window.createPage("Settings2")
-    section = meta.ui:createSection(page, "General - Version 1.042")
+    page = window.createPage("Settings")
+    section = meta.ui:createSection(page, "General - Version 1.04R")
     meta.ui:createDropdownWithout(section, "Cat Key", meta.dropOptions.Toggle, 6, "Set a key for cat")
     meta.ui:createDropdownWithout(section, "Travel Key", meta.dropOptions.Toggle, 6, "Set a key for travel")
     meta.ui:createDropdown(section, "Big Hit Oh Shit!", meta.dropOptions.Toggle, 6,
@@ -210,13 +210,14 @@ local function rotation()
     end
 end
 
-local GuardianKuu = {
-    profileID = 104,
-    profileName = "GuardianKuu2",
+local RestoKuu = {
+    profileID = 105,
+    profileName = "RestoKuu",
     rotation = rotation,
     onLoad = onLoad,
-    onSelect = onSelect
+    onSelect = onSelect,
+    onDeselect = onDeselect
 }
 
 -- Return Profile
-return GuardianKuu
+return RestoKuu

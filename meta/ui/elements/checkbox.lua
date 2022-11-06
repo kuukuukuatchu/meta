@@ -1,6 +1,6 @@
-local DiesalGUI = LibStub("DiesalGUI-1.0")
-local DiesalTools = LibStub("DiesalTools-1.0")
-local DiesalStyle = LibStub("DiesalStyle-1.0")
+local DiesalGUI = LibStub("DiesalGUI-1.1")
+local DiesalTools = LibStub("DiesalTools-1.1")
+local DiesalStyle = LibStub("DiesalStyle-1.1")
 local meta = ...
 meta.ui = meta.ui or {}
 

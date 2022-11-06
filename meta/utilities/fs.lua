@@ -23,6 +23,11 @@ function meta.checkDirectories(type)
             if not meta._G.DirectoryExists(baseDir) then
                 meta._G.print("Creating Base Settings Directory " .. baseDir .. " failed!")
             end
+        elseif type == "rotation" then
+            local rotDir = mainDir .. "/rotation/"
+            if checkIfExists(rotDir) then
+                return true
+            end
         else
             local unitDir = mainDir .. meta.class .. "/"
             if checkIfExists(unitDir) then

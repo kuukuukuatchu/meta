@@ -4,21 +4,10 @@ local rotations = {}
 local events = meta.events
 local update = meta.update
 
-local GetDirectories = function(...)
-    local directory = string.gsub(..., "\\+", "/"):gsub("/+*.lua", "")
-    local count = 1
-    local directories = {}
-    local files = meta._G.ReadFile(directory)
-    if files and #files then
-        for _, file in ipairs(files) do
-            directories[count] = file.path:match("^.+/(.+)$")
-            count = count + 1
-
-        end
-    end
-    return directories
-
-end
+meta.checkDirectories("rotation")
+local rotationInfo = meta.folder .. "\\Settings\\rotation\\" .. strlower(UnitName("player")) .. ".json"
+rotations.settings = rotations.settings or meta.json.load(rotationInfo)
+local settings = rotations.settings
 
 SLASH_META1 = '/meta'
 if metaToggle == nil then
@@ -34,16 +23,33 @@ function SlashCmdList.META(msg, editBox)
     end
 end
 
+local function switchProfiles(name)
+    if not rotations[name] then
+        print("Rotation " .. name .. " does not exist")
+        return false
+    end
+    if name == settings.activeProfile then
+        print("Rotation " .. name .. " is already active")
+        return false
+    end
+    settings.activeProfile = name
+    if settings.lastProfile and rotations[settings.lastProfile] and rotations[settings.lastProfile].onDeselect then
+        print("Removing profile " .. settings.lastProfile)
+        rotations[settings.lastProfile]:onDeselect()
+    end
+    if rotations[name].onSelect then
+        print("Selecting profile " .. name)
+        rotations[name]:onSelect()
+    end
+    if settings.lastProfile ~= name then
+        settings.lastProfile = name
+    end
+    meta.json.save(settings, rotationInfo)
+    return true
+end
+
 function loader.rotationsDirectory()
-    return meta._G.GetWoWDirectory() .. '\\Interface\\AddOns\\meta\\meta\\rotations\\'
-end
-
-function loader.classDirectories()
-    return GetDirectories(string.gsub(loader.rotationsDirectory(), "\\+", "/"))
-end
-
-function loader.specDirectories(class)
-    return GetDirectories(string.gsub(loader.rotationsDirectory() .. class .. '\\', "\\+", "/"))
+    return meta.folder .. '\\meta\\rotations\\'
 end
 
 function loader.profiles(class, spec)
@@ -51,51 +57,64 @@ function loader.profiles(class, spec)
 end
 
 function loader.loadProfiles()
-    local specID = GetSpecializationInfo(GetSpecialization())
+    print("Loader called")
+    local specID, specName = GetSpecializationInfo(GetSpecialization())
     local rotationFound = false
-    for k, v in pairs(meta.windows.profile.rotations.children) do
-        if v then
-            meta.windows.profile.rotations:RemoveListItem(v.settings.value)
-        end
-    end
     wipe(rotations)
-    -- Search each Class Folder in the Rotations Folder
-    for _, class in pairs(loader.classDirectories()) do
-        if class ~= "." and class ~= ".." then
-            -- Search each Spec Folder in the Class Folder
-            for _, spec in pairs(loader.specDirectories(class)) do
-                -- Search each Profile in the Spec Folder
-                for _, profile in pairs(loader.profiles(class, spec)) do
-                    local rotation = require('rotations.' .. class .. '.' .. spec .. '.' .. profile:sub(1, -5))
-                    if rotation then
-                        if rotation.profileID == specID then
-                            if rotationFound == false then
-                                rotationFound = true
-                            end
-                            print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
-                            if metaToggle == 0 then
-                                print("|cffa330c9[meta] |r Rotation Status:|cffFF0000 Disabled")
-                            end
-                            if metaToggle == 1 then
-                                print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled")
-                            end
-                            meta.currentProfile = rotation.profileName
-                            meta.data.settings[meta.currentProfile] = {}
-                            meta.windows.profile.rotations:AddListItem(rotation.profileName)
-                            meta.magic(rotation.rotation)
-                            rotations[rotation.profileName] = rotation
-                            -- rotations[rotation.profileName].onSelect()
-                        end
-                    end
+    for _, profile in pairs(loader.profiles(meta.class, specName)) do
+        local rotation = require('rotations.' .. meta.class .. '.' .. specName .. '.' .. profile:sub(1, -5))
+        if rotation then
+            if rotation.profileID == specID then
+                if rotationFound == false then
+                    rotationFound = true
                 end
+                print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
+                if metaToggle == 0 then
+                    print("|cffa330c9[meta] |r Rotation Status:|cffFF0000 Disabled")
+                end
+                if metaToggle == 1 then
+                    print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled")
+                end
+                meta.magic(rotation.rotation)
+                rotations[rotation.profileName] = rotation
+                meta.windows.profile.rotations:AddListItem(rotation.profileName)
+                print("Rotation Name Added: " .. rotation.profileName)
+                -- rotations[rotation.profileName].onSelect()
             end
         end
     end
+    print("All Profiles Added")
+    meta.currentProfile = settings.activeProfile or "None"
+    meta.data.settings[meta.currentProfile] = {}
+    -- print("---- Current Rotations---")
+    -- for k, v in pairs(meta.windows.profile.rotations.children) do
+    --     print(v.settings.value)
+    -- end
+    -- print("------------")
+    for i = #meta.windows.profile.rotations.children, 1, -1 do
+        -- for k, v in pairs(meta.windows.profile.rotations.children) do
+        local rot = meta.windows.profile.rotations.children[i].settings.value
+        if rotations[rot] then
+            print("----- Rotation found! " .. rot)
+            print(rotations[rot])
+        else
+            print("-----Deleting -------")
+            print(rot)
+            meta.windows.profile.rotations:RemoveListItem(rot)
+            print("-------------")
+        end
+    end
+    --     print("---- Current Rotations after Deletions ---")
+    --     for k, v in pairs(meta.windows.profile.rotations.children) do
+    --         print(v.settings.value)
+    --     end
+    --     print("------------")
     meta.windows.profile.rotations:SetValue(1)
     local selectedRotationName
-    if meta.windows.profile.rotations.children[1] then
+    if rotations[settings.activeProfile] and rotations[settings.activeProfile].onSelect then
+        rotations[settings.activeProfile].onSelect()
+    elseif meta.windows.profile.rotations.children[1] then
         selectedRotationName = meta.windows.profile.rotations.children[1].settings.value
-        print(selectedRotationName)
         rotations[selectedRotationName].onSelect()
     end
     if not rotationFound then
@@ -105,9 +124,25 @@ end
 
 loader.loadProfiles()
 
+meta.windows.profile.rotations:SetEventListener("OnValueChanged", function(this, event, key, value, selection)
+    if value ~= nil and value ~= settings.activeProfile then
+        switchProfiles(value)
+    end
+end)
+
 events.register_callback("ACTIVE_TALENT_GROUP_CHANGED", function()
-    print("test")
-    loader.loadProfiles()
+    local _, currentSpec = GetSpecializationInfo(GetSpecialization())
+    if meta.specName ~= currentSpec then
+        if settings.lastProfile and rotations[settings.lastProfile] and rotations[settings.lastProfile].onDeselect then
+            print("Removing profile "..settings.lastProfile)
+            rotations[settings.lastProfile]:onDeselect()
+        end
+
+        print(meta.specName)
+        print(currentSpec)
+        meta.specName = currentSpec
+        loader.loadProfiles()
+    end
 end)
 
 events.register_callback("PLAYER_ENTERING_WORLD", function()

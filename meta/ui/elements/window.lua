@@ -1,6 +1,6 @@
-local DiesalGUI = _G.LibStub("DiesalGUI-1.0")
-local DiesalStyle = _G.LibStub("DiesalStyle-1.0")
-local DiesalTools = _G.LibStub("DiesalTools-1.0")
+local DiesalGUI = _G.LibStub("DiesalGUI-1.1")
+local DiesalStyle = _G.LibStub("DiesalStyle-1.1")
+local DiesalTools = _G.LibStub("DiesalTools-1.1")
 local SharedMedia = _G.LibStub("LibSharedMedia-3.0")
 local meta = ...
 meta.ui = meta.ui or {}
@@ -86,6 +86,7 @@ function meta.ui:createWindow(name, width, height, title, color, messageWindow)
     end
 
     local function RemoveListItem(self, item)
+        print("Call to remove "..item)
         window.initializing = true
         for key, child in pairs(self.children) do
             if child.settings.value == item then
@@ -99,8 +100,11 @@ function meta.ui:createWindow(name, width, height, title, color, messageWindow)
                     for _, child in pairs(window.children) do
                         child:Hide()
                     end
-                    window.children[window.current_page]:Show()
-                    self:SetValue(window.current_page)
+                    print(tostring(window.current_page))
+                    -- if window.children[window.current_page] then
+                        window.children[window.current_page]:Show()
+                        self:SetValue(window.current_page)
+                    -- end
                 end
                 break
             end

@@ -1,4 +1,4 @@
-local DiesalGUI = _G.LibStub("DiesalGUI-1.0")
+local DiesalGUI = _G.LibStub("DiesalGUI-1.1")
 local meta = ...
 meta.ui = meta.ui or {}
 

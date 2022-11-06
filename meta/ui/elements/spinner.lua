@@ -1,5 +1,5 @@
-local DiesalGUI = _G.LibStub("DiesalGUI-1.0")
-local DiesalTools = _G.LibStub("DiesalTools-1.0")
+local DiesalGUI = _G.LibStub("DiesalGUI-1.1")
+local DiesalTools = _G.LibStub("DiesalTools-1.1")
 local meta = ...
 meta.ui = meta.ui or {}
 function meta.ui:createSpinner(parent, text, number, min, max, step, tooltip, tooltipSpin, hideCheckbox, base)
