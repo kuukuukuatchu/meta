@@ -28,21 +28,26 @@ local function switchProfiles(name)
         print("Rotation " .. name .. " does not exist")
         return false
     end
-    if name == settings.activeProfile then
+    if settings.enabled and name == settings.activeProfile then
         print("Rotation " .. name .. " is already active")
         return false
     end
     settings.activeProfile = name
-    if settings.lastProfile and rotations[settings.lastProfile] and rotations[settings.lastProfile].onDeselect then
-        print("Removing profile " .. settings.lastProfile)
+    settings.enabled = true
+    if settings.lastProfile and rotations[settings.lastProfile] and
+        rotations[settings.lastProfile].onDeselect then
+        -- print("Removing profile " .. settings.lastProfile)
         rotations[settings.lastProfile]:onDeselect()
     end
     if rotations[name].onSelect then
-        print("Selecting profile " .. name)
+        -- print("Selecting profile " .. name)
         rotations[name]:onSelect()
     end
     if settings.lastProfile ~= name then
         settings.lastProfile = name
+    end
+    if settings[meta.specName].lastProfile ~= name then
+        settings[meta.specName].lastProfile = name
     end
     meta.json.save(settings, rotationInfo)
     return true
@@ -57,7 +62,6 @@ function loader.profiles(class, spec)
 end
 
 function loader.loadProfiles()
-    print("Loader called")
     local specID, specName = GetSpecializationInfo(GetSpecialization())
     local rotationFound = false
     wipe(rotations)
@@ -69,53 +73,39 @@ function loader.loadProfiles()
                     rotationFound = true
                 end
                 print('|cffa330c9[meta] |r Rotation Found: |cFFFF0000' .. rotation.profileName)
-                if metaToggle == 0 then
-                    print("|cffa330c9[meta] |r Rotation Status:|cffFF0000 Disabled")
-                end
-                if metaToggle == 1 then
-                    print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled")
-                end
                 meta.magic(rotation.rotation)
                 rotations[rotation.profileName] = rotation
                 meta.windows.profile.rotations:AddListItem(rotation.profileName)
-                print("Rotation Name Added: " .. rotation.profileName)
-                -- rotations[rotation.profileName].onSelect()
             end
         end
     end
-    print("All Profiles Added")
-    meta.currentProfile = settings.activeProfile or "None"
+    print("|cffa330c9[meta] |r All Profiles Added")
+    if settings[meta.specName] then
+        meta.currentProfile = settings[meta.specName].lastProfile
+    elseif meta.windows.profile.rotations.children[1] then
+        meta.currentProfile = meta.windows.profile.rotations.children[1].settings.value
+        settings[meta.specName] = {}
+        settings[meta.specName].lastProfile = meta.currentProfile
+    else
+        print("No profiles found for spec " .. meta.specName)
+        meta.windows.profile.rotations:AddListItem("None")
+        meta.windows.profile.rotations:SetValue(1)
+        return false
+    end
     meta.data.settings[meta.currentProfile] = {}
-    -- print("---- Current Rotations---")
-    -- for k, v in pairs(meta.windows.profile.rotations.children) do
-    --     print(v.settings.value)
-    -- end
-    -- print("------------")
-    for i = #meta.windows.profile.rotations.children, 1, -1 do
-        -- for k, v in pairs(meta.windows.profile.rotations.children) do
-        local rot = meta.windows.profile.rotations.children[i].settings.value
-        if rotations[rot] then
-            print("----- Rotation found! " .. rot)
-            print(rotations[rot])
-        else
-            print("-----Deleting -------")
-            print(rot)
-            meta.windows.profile.rotations:RemoveListItem(rot)
-            print("-------------")
+    for k, v in pairs(meta.windows.profile.rotations.children) do
+        if v and v.settings.value == meta.currentProfile then
+            meta.windows.profile.rotations:SetValue(k)
+            break
         end
     end
-    --     print("---- Current Rotations after Deletions ---")
-    --     for k, v in pairs(meta.windows.profile.rotations.children) do
-    --         print(v.settings.value)
-    --     end
-    --     print("------------")
-    meta.windows.profile.rotations:SetValue(1)
-    local selectedRotationName
-    if rotations[settings.activeProfile] and rotations[settings.activeProfile].onSelect then
-        rotations[settings.activeProfile].onSelect()
-    elseif meta.windows.profile.rotations.children[1] then
-        selectedRotationName = meta.windows.profile.rotations.children[1].settings.value
-        rotations[selectedRotationName].onSelect()
+    settings.enabled = false
+    switchProfiles(meta.currentProfile)
+    if metaToggle == 0 then
+        print("|cffa330c9[meta] |r Rotation Status:|cffFF0000 Disabled")
+    end
+    if metaToggle == 1 then
+        print("|cffa330c9[meta] |r Rotation Status:|cff00FF00 Enabled")
     end
     if not rotationFound then
         print('|cffa330c9[meta] |r No Rotation Found For Spec: |cFFFF0000' .. specID)
@@ -125,7 +115,7 @@ end
 loader.loadProfiles()
 
 meta.windows.profile.rotations:SetEventListener("OnValueChanged", function(this, event, key, value, selection)
-    if value ~= nil and value ~= settings.activeProfile then
+    if value ~= nil  then
         switchProfiles(value)
     end
 end)
@@ -133,13 +123,11 @@ end)
 events.register_callback("ACTIVE_TALENT_GROUP_CHANGED", function()
     local _, currentSpec = GetSpecializationInfo(GetSpecialization())
     if meta.specName ~= currentSpec then
-        if settings.lastProfile and rotations[settings.lastProfile] and rotations[settings.lastProfile].onDeselect then
-            print("Removing profile "..settings.lastProfile)
+        meta.windows.profile.rotations:ReleaseChildren()
+        if settings.lastProfile and rotations[settings.lastProfile] and
+            rotations[settings.lastProfile].onDeselect then
             rotations[settings.lastProfile]:onDeselect()
         end
-
-        print(meta.specName)
-        print(currentSpec)
         meta.specName = currentSpec
         loader.loadProfiles()
     end

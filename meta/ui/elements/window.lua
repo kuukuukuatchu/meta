@@ -86,7 +86,6 @@ function meta.ui:createWindow(name, width, height, title, color, messageWindow)
     end
 
     local function RemoveListItem(self, item)
-        print("Call to remove "..item)
         window.initializing = true
         for key, child in pairs(self.children) do
             if child.settings.value == item then
@@ -100,11 +99,8 @@ function meta.ui:createWindow(name, width, height, title, color, messageWindow)
                     for _, child in pairs(window.children) do
                         child:Hide()
                     end
-                    print(tostring(window.current_page))
-                    -- if window.children[window.current_page] then
-                        window.children[window.current_page]:Show()
-                        self:SetValue(window.current_page)
-                    -- end
+                    window.children[window.current_page]:Show()
+                    self:SetValue(window.current_page)
                 end
                 break
             end
@@ -166,12 +162,11 @@ function meta.ui:createWindow(name, width, height, title, color, messageWindow)
         end
         return scrollFrame
     end
-    
+
     window.leftArrow = meta.ui:createLeftArrow(window.header)
     window.rightArrow = meta.ui:createRightArrow(window.header)
     window.leftArrow:Hide()
     window.rightArrow:Hide()
-    
 
     window.current_page = window.current_page or 1
 
